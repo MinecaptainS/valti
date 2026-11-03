@@ -1,6 +1,7 @@
 /* No network requests, dependencies, or official logo assets. */
 "use strict";
-const WEIGHTS = [0.9, 1, 1, 1.1, 1, 0.9, 0.8, 1];
+const LEGACY_WEIGHTS = [0.9, 1, 1, 1.1, 1, 0.9, 0.8, 1];
+const WEIGHTS = [1.2, 1, 1, 1.1, 1, 0.9, 0.8, 1];
 const center = (v) => {
   const m = v.reduce((a, b) => a + b, 0) / v.length;
   return v.map((x) => x - m);
@@ -15,35 +16,79 @@ function cosine(u, p, w = WEIGHTS) {
 }
 function maxScores(data) {
   return data.dims.map((d) =>
-    data.questions.reduce(
-      (sum, q) =>
-        sum + Math.max(...q.options.map((o) => o.weights[d.key] || 0)),
-      0,
-    ),
+    data.questions
+      .filter((q) => q.kind !== "aim")
+      .reduce(
+        (sum, q) =>
+          sum + Math.max(...q.options.map((o) => o.weights[d.key] || 0)),
+        0,
+      ),
   );
 }
-function validAnswers(a, data) {
+function validAnswers(a, data, version = data.scoring?.version || 1) {
+  const count =
+    version === 1
+      ? data.questions.filter((q) => q.kind !== "aim").length
+      : data.questions.length;
   return (
+    [1, 2].includes(version) &&
     Array.isArray(a) &&
-    a.length === data.questions.length &&
+    a.length === count &&
     Array.from(a).every((n) => Number.isInteger(n) && n >= 0 && n < 4)
   );
 }
-function score(answers, data) {
-  if (!validAnswers(answers, data)) throw new Error("请完成全部 20 道题。");
+function calibrateStyle(value, data) {
+  const { styleFloor, styleExponent } = data.scoring;
+  return (
+    styleFloor +
+    (100 - styleFloor) *
+      Math.pow(Math.max(0, Math.min(100, value)) / 100, styleExponent)
+  );
+}
+function score(answers, data, version = data.scoring?.version || 1) {
+  if (!validAnswers(answers, data, version))
+    throw new Error(
+      `请完成全部 ${version === 1 ? data.questions.filter((q) => q.kind !== "aim").length : data.questions.length} 道题。`,
+    );
+  const styleQuestions = data.questions
+    .map((q, index) => ({ q, index }))
+    .filter(({ q }) => q.kind !== "aim");
   const raw = data.dims.map((d) =>
-    data.questions.reduce(
-      (s, q, i) => s + (q.options[answers[i]].weights[d.key] || 0),
+    styleQuestions.reduce(
+      (s, { q, index }) => s + (q.options[answers[index]].weights[d.key] || 0),
       0,
     ),
   );
-  const maxima = maxScores(data),
-    pct = raw.map((n, i) => (maxima[i] ? (100 * n) / maxima[i] : 0)),
-    u = center(pct);
+  const maxima = maxScores(data);
+  const rawPct = raw.map((n, i) => (maxima[i] ? (100 * n) / maxima[i] : 0));
+  const pct =
+    version === 1
+      ? rawPct.slice()
+      : rawPct.map((value) => calibrateStyle(value, data));
+  let mechanicalAim = null;
+  if (version === 2) {
+    const aimQuestions = data.questions
+      .map((q, index) => ({ q, index }))
+      .filter(({ q }) => q.kind === "aim");
+    const totalWeight = aimQuestions.reduce(
+      (sum, { q }) => sum + q.aimWeight,
+      0,
+    );
+    mechanicalAim =
+      aimQuestions.reduce(
+        (sum, { q, index }) =>
+          sum + q.aimWeight * q.options[answers[index]].weights.AIM,
+        0,
+      ) / totalWeight;
+    const specialWeight = data.scoring.aimSpecialWeight;
+    pct[0] = specialWeight * mechanicalAim + (1 - specialWeight) * pct[0];
+  }
+  const u = center(pct),
+    weights = version === 1 ? LEGACY_WEIGHTS : WEIGHTS;
   const role = data.questions[0].options[answers[0]].role;
   const ranked = data.players
     .map((player) => {
-      const sim = cosine(u, center(player.v.map((x) => x * 10)));
+      const sim = cosine(u, center(player.v.map((x) => x * 10)), weights);
       return {
         player,
         sim,
@@ -65,7 +110,7 @@ function score(answers, data) {
     .filter((p) => p.id !== top.player.id)
     .map((player) => ({
       player,
-      value: cosine(u, center(player.v.map((x) => x * 10))),
+      value: cosine(u, center(player.v.map((x) => x * 10)), weights),
     }))
     .sort(
       (a, b) => a.value - b.value || a.player.id.localeCompare(b.player.id),
@@ -74,7 +119,11 @@ function score(answers, data) {
   return {
     raw,
     maxima,
+    rawPct,
     pct,
+    mechanicalAim,
+    version,
+    questionCount: answers.length,
     role,
     ranked,
     top,
@@ -86,6 +135,15 @@ function score(answers, data) {
     roleBest: sameRole[0].player,
     roleLeast: sameRole.at(-1).player,
   };
+}
+function resultVersion(entry, data) {
+  const version =
+    entry?.scoringVersion ??
+    (entry?.answers?.length === data.questions.length ? 2 : 1);
+  return validAnswers(entry?.answers, data, version) ? version : null;
+}
+function scoreEntry(entry, data) {
+  return score(entry.answers, data, resultVersion(entry, data));
 }
 function radarPoints(values, cx = 180, cy = 172, r = 112) {
   return values.map((v, i) => {
@@ -104,6 +162,10 @@ if (typeof module !== "undefined")
     validAnswers,
     score,
     radarPoints,
+    calibrateStyle,
+    LEGACY_WEIGHTS,
+    resultVersion,
+    scoreEntry,
     WEIGHTS,
   };
 
@@ -260,7 +322,12 @@ if (typeof document !== "undefined") {
       )
       .join("")}</svg>`;
   }
-  const defaultState = () => ({ draft: null, history: [], unlocked: [] });
+  const defaultState = () => ({
+    schemaVersion: 2,
+    draft: null,
+    history: [],
+    unlocked: [],
+  });
   let storageOK = true,
     state = defaultState(),
     timer = null,
@@ -278,9 +345,10 @@ if (typeof document !== "undefined") {
             h &&
             typeof h.id === "string" &&
             Number.isFinite(h.time) &&
-            validAnswers(h.answers, DATA),
+            resultVersion(h, DATA) !== null,
         )
-        .slice(0, 50);
+        .slice(0, 50)
+        .map((h) => ({ ...h, scoringVersion: resultVersion(h, DATA) }));
     if (Array.isArray(value.unlocked))
       next.unlocked = [
         ...new Set(
@@ -292,16 +360,25 @@ if (typeof document !== "undefined") {
       d &&
       typeof d.id === "string" &&
       Array.isArray(d.answers) &&
-      d.answers.length === 20 &&
+      (d.answers.length === DATA.questions.length ||
+        d.answers.length ===
+          DATA.questions.filter((q) => q.kind !== "aim").length) &&
       d.answers.every(
         (x) => x === null || (Number.isInteger(x) && x >= 0 && x < 4),
       ) &&
       Number.isInteger(d.index) &&
       d.index >= 0 &&
-      d.index < 20 &&
+      d.index < d.answers.length &&
       d.answers.slice(0, d.index).every((x) => x !== null)
     )
-      next.draft = d;
+      next.draft = {
+        ...d,
+        scoringVersion: 2,
+        answers: [
+          ...d.answers,
+          ...Array(DATA.questions.length - d.answers.length).fill(null),
+        ],
+      };
     return next;
   }
   try {
@@ -337,15 +414,35 @@ if (typeof document !== "undefined") {
   }
   function start(fresh = false) {
     if (fresh || !state.draft) {
-      state.draft = { id: uid(), index: 0, answers: Array(20).fill(null) };
+      state.draft = {
+        id: uid(),
+        scoringVersion: 2,
+        index: 0,
+        answers: Array(DATA.questions.length).fill(null),
+      };
       persist();
     }
     if (location.hash === "#quiz") renderQuiz();
     else location.hash = "quiz";
   }
+  function upgradeResult() {
+    if (!current || current.r.version !== 1) return;
+    const oldAnswers = current.entry.answers;
+    state.draft = {
+      id: uid(),
+      scoringVersion: 2,
+      index: oldAnswers.length,
+      answers: [
+        ...oldAnswers,
+        ...Array(DATA.questions.length - oldAnswers.length).fill(null),
+      ],
+    };
+    persist();
+    location.hash = "quiz";
+  }
   function home() {
     page(
-      `<section class="hero"><div class="hero-copy"><div class="eyebrow">VALORANT PERSONALITY TEST</div><h1>你是<span class="game">VALORANT</span>的哪个选手<span style="color:var(--red)">？</span></h1><p class="subtitle">20 题 · 2 分钟 · 35 位职业选手</p><p class="muted">关键一局，你会怎么打？<br>让你的选择，画出属于你的选手 DNA。</p><button class="btn primary" data-action="start">${state.draft ? "继续测试 · " + (state.draft.index + 1) + "/20" : "开始测试"} <span class="arrow" aria-hidden="true">↗</span></button>${state.draft ? '<div><button class="text-btn" data-action="restart">从第一题重新开始 →</button></div>' : ""}<p class="muted" style="font-size:10px;margin-top:16px">没有标准答案。按你的第一反应来。</p></div><div class="hero-art" aria-label="打法八维示意图"><div class="art-top"><span>PLAYER PROFILE / 001</span><strong>● AWAITING YOU</strong></div>${radar([92, 85, 35, 76, 82, 51, 68, 95], [65, 45, 75, 85, 55, 80, 90, 50])}<div class="art-name">WHO ARE <span>YOU?</span></div><div class="art-bottom"><span>8 DIMENSIONS</span><span>35 POSSIBILITIES ↗</span></div></div></section><section class="features" aria-label="测试介绍"><div class="feature"><span>01</span><div><h3>每一局，都有你的选择</h3><p>20 个实战情境，测的是打法气质。</p></div></div><div class="feature"><span>02</span><div><h3>看见你的八维 DNA</h3><p>枪法到心态，你的风格不止一面。</p></div></div><div class="feature"><span>03</span><div><h3>解锁你的选手图鉴</h3><p>收集结果，保存专属选手分享卡。</p></div></div></section>`,
+      `<section class="hero"><div class="hero-copy"><div class="eyebrow">VALORANT PERSONALITY TEST</div><h1>你是<span class="game">VALORANT</span>的哪个选手<span style="color:var(--red)">？</span></h1><p class="subtitle">${DATA.questions.length} 题 · 约 3 分钟 · 35 位职业选手</p><p class="muted">关键一局，你会怎么打？<br>让你的选择，画出属于你的选手 DNA。</p><button class="btn primary" data-action="start">${state.draft ? "继续测试 · " + (state.draft.index + 1) + "/" + DATA.questions.length : "开始测试"} <span class="arrow" aria-hidden="true">↗</span></button>${state.draft ? '<div><button class="text-btn" data-action="restart">从第一题重新开始 →</button></div>' : ""}<p class="muted" style="font-size:10px;margin-top:16px">没有标准答案。按你的第一反应来。</p></div><div class="hero-art" aria-label="打法八维示意图"><div class="art-top"><span>PLAYER PROFILE / 001</span><strong>● AWAITING YOU</strong></div>${radar([92, 85, 35, 76, 82, 51, 68, 95], [65, 45, 75, 85, 55, 80, 90, 50])}<div class="art-name">WHO ARE <span>YOU?</span></div><div class="art-bottom"><span>8 DIMENSIONS</span><span>35 POSSIBILITIES ↗</span></div></div></section><section class="features" aria-label="测试介绍"><div class="feature"><span>01</span><div><h3>每一局，都有你的选择</h3><p>20 个实战情境 + 3 道枪法专项。</p></div></div><div class="feature"><span>02</span><div><h3>看见你的八维 DNA</h3><p>枪法到心态，你的风格不止一面。</p></div></div><div class="feature"><span>03</span><div><h3>解锁你的选手图鉴</h3><p>收集结果，保存专属选手分享卡。</p></div></div></section>`,
     );
   }
   function renderQuiz() {
@@ -356,7 +453,7 @@ if (typeof document !== "undefined") {
     const { index, answers } = state.draft,
       q = DATA.questions[index];
     page(
-      `<section class="quiz"><div class="quiz-top"><button class="text-btn" data-action="previous" ${index === 0 ? "disabled" : ""}>← 上一题</button><span class="mono">${String(index + 1).padStart(2, "0")} <span class="muted">/ 20</span></span></div><div class="progress" role="progressbar" aria-label="答题进度" aria-valuemin="0" aria-valuemax="20" aria-valuenow="${index}"><span style="width:${index * 5}%"></span></div><div class="question-num mono">ROUND ${String(index + 1).padStart(2, "0")}</div><h1>${esc(q.text)}</h1><div class="options" role="group" aria-label="选择一个答案">${q.options.map((o, i) => `<button class="option ${answers[index] === i ? "selected" : ""}" data-choice="${i}" aria-pressed="${answers[index] === i}"><span class="letter" aria-hidden="true">${"ABCD"[i]}</span><span>${esc(o.text)}</span></button>`).join("")}</div><div class="quiz-foot"><span>选中后自动进入下一题</span><span>${storageOK ? "进度自动保存 · 可按键盘 1–4 选择" : "本地存储不可用 · 请勿刷新"}</span></div></section>`,
+      `<section class="quiz"><div class="quiz-top"><button class="text-btn" data-action="previous" ${index === 0 ? "disabled" : ""}>← 上一题</button><span class="mono">${String(index + 1).padStart(2, "0")} <span class="muted">/ ${DATA.questions.length}</span></span></div><div class="progress" role="progressbar" aria-label="答题进度" aria-valuemin="0" aria-valuemax="${DATA.questions.length}" aria-valuenow="${index}"><span style="width:${(100 * index) / DATA.questions.length}%"></span></div><div class="question-num mono">ROUND ${String(index + 1).padStart(2, "0")}</div>${q.kind === "aim" ? '<div class="eyebrow">枪法专项</div>' : ""}<h1>${esc(q.text)}</h1>${q.hint ? `<p class="muted question-hint">${esc(q.hint)}</p>` : ""}<div class="options" role="group" aria-label="选择一个答案">${q.options.map((o, i) => `<button class="option ${answers[index] === i ? "selected" : ""}" data-choice="${i}" aria-pressed="${answers[index] === i}"><span class="letter" aria-hidden="true">${"ABCD"[i]}</span><span>${esc(o.text)}</span></button>`).join("")}</div><div class="quiz-foot"><span>选中后自动进入下一题</span><span>${storageOK ? "进度自动保存 · 可按键盘 1–4 选择" : "本地存储不可用 · 请勿刷新"}</span></div></section>`,
     );
   }
   function choose(n) {
@@ -372,7 +469,7 @@ if (typeof document !== "undefined") {
     });
     timer = setTimeout(() => {
       timer = null;
-      if (d.index === 19) {
+      if (d.index === DATA.questions.length - 1) {
         finish();
       } else {
         d.index++;
@@ -385,7 +482,12 @@ if (typeof document !== "undefined") {
     const d = state.draft;
     if (!d || !validAnswers(d.answers, DATA)) return;
     const result = score(d.answers, DATA);
-    const entry = { id: d.id, time: Date.now(), answers: d.answers.slice() };
+    const entry = {
+      id: d.id,
+      scoringVersion: 2,
+      time: Date.now(),
+      answers: d.answers.slice(),
+    };
     state.history = [
       entry,
       ...state.history.filter((h) => h.id !== entry.id),
@@ -428,7 +530,7 @@ if (typeof document !== "undefined") {
       );
       return;
     }
-    const r = score(entry.answers, DATA);
+    const r = scoreEntry(entry, DATA);
     current = { entry, r };
     const p = r.top.player;
     page(
@@ -441,7 +543,7 @@ if (typeof document !== "undefined") {
         )}</div></div><div class="panel"><div class="section-label">YOUR PLAYSTYLE / 八维对照</div>${radar(
         r.pct,
         p.v.map((x) => x * 10),
-      )}<div class="legend"><span>你的选择</span><span class="ref">${esc(p.name)}</span></div><div class="dimension-list">${DATA.dims.map((d, i) => `<div>${esc(d.label)}<strong>${Math.round(r.pct[i])}</strong></div>`).join("")}</div></div><div class="panel"><div class="section-label">PLAYER PERSONALITY / 你的人设</div><p class="profile">${esc(profile(p))}</p><blockquote class="original-note">${esc(p.note)}</blockquote><p class="muted" style="font-size:11px;margin-top:16px">代表英雄：${esc(p.heroes)}</p></div><div class="panel"><div class="section-label">ROLE CONFESSION / 你的位置自白</div><h2>${esc(r.role)}</h2><p class="profile">${esc(roleVoice[r.role])}在${esc(r.role)}选手里，你最像 ${esc(r.roleBest.name)}，最不像 ${esc(r.roleLeast.name)}。这是节奏和选择的差异，不是实力排名。</p>${r.pct[2] >= 70 ? '<span class="role-tag">✦ 指挥潜质 · IGL ≥ 70</span>' : ""}</div><div class="panel scene"><div><div class="section-label">YOUR HIGHLIGHT</div><h2>你的名场面</h2></div><p>${esc(scene(entry.answers))}</p></div><div class="panel"><div class="section-label">BEST DUO / 最佳拍档</div><div class="partner-line">${shield(r.complement)}<strong>${esc(r.complement.name)}</strong></div><p class="profile">你们俩组队会把短板补成另一种强项：${esc(traits[r.pct.indexOf(Math.max(...r.pct))])}由你带头，他用${esc(keywords(r.complement)[0])}接住你的另一面。记得先沟通节奏，互补才不会变成各打各的。</p></div><div class="panel"><div class="section-label">COLLECTION / 本机解锁进度</div><h2>${state.unlocked.length}<span class="muted" style="font-size:18px"> / 35</span></h2><p class="muted" style="font-size:13px">每次完成测试，解锁你的主选手。混合结果会同时解锁两位选手。</p><a class="text-btn" href="#atlas">前往选手图鉴 ↗</a></div></section><div class="button-row"><button class="btn primary" data-action="share">保存分享卡 ↗</button><button class="btn" data-action="restart">再测一次</button><a class="btn ghost" href="#atlas">查看图鉴</a></div><p class="muted" style="font-size:10px;margin-top:18px">相似度表示八维打法方向的接近程度，不代表实力。所有结果仅保存在当前浏览器。</p>`,
+      )}<div class="legend"><span>你的选择</span><span class="ref">${esc(p.name)}</span></div><div class="dimension-list">${DATA.dims.map((d, i) => `<div>${esc(d.label)}<strong>${Math.round(r.pct[i])}</strong></div>`).join("")}</div></div><div class="panel"><div class="section-label">PLAYER PERSONALITY / 你的人设</div><p class="profile">${esc(profile(p))}</p><blockquote class="original-note">${esc(p.note)}</blockquote><p class="muted" style="font-size:11px;margin-top:16px">代表英雄：${esc(p.heroes)}</p></div><div class="panel"><div class="section-label">ROLE CONFESSION / 你的位置自白</div><h2>${esc(r.role)}</h2><p class="profile">${esc(roleVoice[r.role])}在${esc(r.role)}选手里，你最像 ${esc(r.roleBest.name)}，最不像 ${esc(r.roleLeast.name)}。这是节奏和选择的差异，不是实力排名。</p>${r.pct[2] >= 70 ? '<span class="role-tag">✦ 指挥潜质 · IGL ≥ 70</span>' : ""}</div><div class="panel scene"><div><div class="section-label">YOUR HIGHLIGHT</div><h2>你的名场面</h2></div><p>${esc(scene(entry.answers))}</p></div><div class="panel"><div class="section-label">BEST DUO / 最佳拍档</div><div class="partner-line">${shield(r.complement)}<strong>${esc(r.complement.name)}</strong></div><p class="profile">你们俩组队会把短板补成另一种强项：${esc(traits[r.pct.indexOf(Math.max(...r.pct))])}由你带头，他用${esc(keywords(r.complement)[0])}接住你的另一面。记得先沟通节奏，互补才不会变成各打各的。</p></div><div class="panel"><div class="section-label">COLLECTION / 本机解锁进度</div><h2>${state.unlocked.length}<span class="muted" style="font-size:18px"> / 35</span></h2><p class="muted" style="font-size:13px">每次完成测试，解锁你的主选手。混合结果会同时解锁两位选手。</p><a class="text-btn" href="#atlas">前往选手图鉴 ↗</a></div></section><div class="button-row"><button class="btn primary" data-action="share">保存分享卡 ↗</button>${r.version === 1 ? '<button class="btn" data-action="upgrade">补答 3 道枪法题</button>' : ""}<button class="btn" data-action="restart">再测一次</button><a class="btn ghost" href="#atlas">查看图鉴</a></div><p class="muted" style="font-size:10px;margin-top:18px">${r.version === 1 ? "这是旧版 20 题结果。补答 3 道枪法题，即可生成新版结果。" : "八维为风格指数，枪法结合专项自评；相似度不代表实力。"}所有结果仅保存在当前浏览器。</p>`,
     );
   }
   function atlas() {
@@ -463,11 +565,11 @@ if (typeof document !== "undefined") {
         state.history.length
           ? `<div class="history-list">${state.history
               .map((h) => {
-                const r = score(h.answers, DATA);
-                return `<button class="history-item" data-result="${esc(h.id)}">${shield(r.top.player)}<span class="grow"><strong>${esc(r.top.player.name)}</strong><small>${esc(new Date(h.time).toLocaleString("zh-CN", { hour12: false }))} · ${esc(r.role)}</small></span><span class="score">${r.similarity}%</span><span aria-hidden="true">↗</span></button>`;
+                const r = scoreEntry(h, DATA);
+                return `<button class="history-item" data-result="${esc(h.id)}">${shield(r.top.player)}<span class="grow"><strong>${esc(r.top.player.name)}</strong><small>${esc(new Date(h.time).toLocaleString("zh-CN", { hour12: false }))} · ${esc(r.role)} · ${r.version === 1 ? "旧版 20 题" : "23 题 · 含枪法专项"}</small></span><span class="score">${r.similarity}%</span><span aria-hidden="true">↗</span></button>`;
               })
               .join("")}</div>`
-          : '<div class="panel empty"><h2>你的第一份选手 DNA，还在等你</h2><p>完成 20 道题，结果会自动出现在这里。</p><button class="btn primary" data-action="start">开始测试 →</button></div>'
+          : `<div class="panel empty"><h2>你的第一份选手 DNA，还在等你</h2><p>完成 ${DATA.questions.length} 道题，结果会自动出现在这里。</p><button class="btn primary" data-action="start">开始测试 →</button></div>`
       }`,
     );
   }
@@ -642,7 +744,7 @@ if (typeof document !== "undefined") {
     ctx.fillText("YOUR PLAY. YOUR IDENTITY.", 100, 1773);
     ctx.font = '20px "Microsoft YaHei",sans-serif';
     ctx.fillStyle = "#8b9db0";
-    ctx.fillText("20 题 · 8 个维度 · 35 位职业选手", 100, 1815);
+    ctx.fillText(r.questionCount + " 题 · 8 个维度 · 35 位职业选手", 100, 1815);
     ctx.textAlign = "right";
     ctx.font = '17px "Microsoft YaHei",sans-serif';
     ctx.fillText("非官方粉丝作品 / 仅供娱乐", 980, 1845);
@@ -710,6 +812,9 @@ if (typeof document !== "undefined") {
         break;
       case "restart":
         start(true);
+        break;
+      case "upgrade":
+        upgradeResult();
         break;
       case "previous":
         if (timer) {

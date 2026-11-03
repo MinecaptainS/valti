@@ -408,6 +408,10 @@ footer {
   line-height: 1.4;
   letter-spacing: -0.02em;
 }
+.question-hint {
+  font-size: 12px;
+  margin: -14px 0 24px;
+}
 .options {
   display: grid;
   gap: 12px;

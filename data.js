@@ -1,6 +1,6 @@
-/* Original player/team values preserved from the handoff. */
+/* Original player/team values and first 20 questions preserved from the handoff. */
 const DATA = {
-  version: 2,
+  version: 3,
   dims: [
     {
       key: "AIM",
@@ -1383,6 +1383,109 @@ const DATA = {
         },
       ],
     },
+    {
+      id: "Q21",
+      kind: "aim",
+      aimWeight: 5,
+      text: "你的靶场中等靶平均成绩是？",
+      hint: "按常用枪械连续测 3 轮，每轮 30 靶，取平均成绩并四舍五入。",
+      options: [
+        {
+          text: "27–30",
+          weights: {
+            AIM: 100,
+          },
+        },
+        {
+          text: "22–26",
+          weights: {
+            AIM: 75,
+          },
+        },
+        {
+          text: "16–21",
+          weights: {
+            AIM: 45,
+          },
+        },
+        {
+          text: "15 及以下",
+          weights: {
+            AIM: 15,
+          },
+        },
+      ],
+    },
+    {
+      id: "Q22",
+      kind: "aim",
+      aimWeight: 3,
+      text: "横拉出去，敌人就在预瞄点附近。你的急停首发通常是？",
+      options: [
+        {
+          text: "左右换向后也能反复完成，首发很少失控",
+          weights: {
+            AIM: 100,
+          },
+        },
+        {
+          text: "多数时候能停稳，并让第一枪打在预期位置",
+          weights: {
+            AIM: 75,
+          },
+        },
+        {
+          text: "能停住，但经常要重新找头再开枪",
+          weights: {
+            AIM: 45,
+          },
+        },
+        {
+          text: "人还没完全停住，枪已经响了",
+          weights: {
+            AIM: 15,
+          },
+        },
+      ],
+    },
+    {
+      id: "Q23",
+      kind: "aim",
+      aimWeight: 2,
+      text: "马枪之后，你会：",
+      options: [
+        {
+          text: "我几乎从不马枪",
+          weights: {
+            AIM: 100,
+          },
+        },
+        {
+          text: "冷静横移重新定位",
+          weights: {
+            AIM: 75,
+          },
+        },
+        {
+          text: "继续按住左键尝试控枪击杀",
+          weights: {
+            AIM: 45,
+          },
+        },
+        {
+          text: "马到底",
+          weights: {
+            AIM: 15,
+          },
+        },
+      ],
+    },
   ],
+  scoring: {
+    version: 2,
+    styleFloor: 20,
+    styleExponent: 0.5,
+    aimSpecialWeight: 0.75,
+  },
 };
 if (typeof module !== "undefined") module.exports = DATA;

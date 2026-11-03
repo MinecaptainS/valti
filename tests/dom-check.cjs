@@ -77,7 +77,7 @@ function boot(
 }
 async function main() {
   let q = boot();
-  assert.match(q.text(), /20 题 · 2 分钟 · 35 位职业选手/);
+  assert.match(q.text(), /23 题 · 约 3 分钟 · 35 位职业选手/);
   q.click('[data-action="start"]');
   await sleep(20);
   assert.match(q.text(), /你主要玩的英雄是/);
@@ -101,12 +101,36 @@ async function main() {
   q = boot(saved, "https://valti.test/#quiz");
   assert.match(q.text(), /1v3 残局/);
   log.push("Answer, previous, edit and reload restoration passed.");
-  for (let i = 2; i < 20; i++) {
+  for (let i = 2; i < 23; i++) {
+    if (i === 20) {
+      assert.match(q.text(), /中等靶平均成绩/);
+      assert.equal(
+        q.w.__qa.getState().history.length,
+        0,
+        "the original 20 questions must not finish the test",
+      );
+      assert.deepEqual(
+        [...q.w.document.querySelectorAll(".option span:last-child")].map(
+          (n) => n.textContent,
+        ),
+        ["27–30", "22–26", "16–21", "15 及以下"],
+      );
+      assert.equal(
+        q.w.document
+          .querySelector('[role="progressbar"]')
+          .getAttribute("aria-valuemax"),
+        "23",
+      );
+    }
+    if (i === 21) assert.match(q.text(), /急停首发/);
+    if (i === 22) assert.match(q.text(), /马枪之后/);
     q.click('[data-choice="' + (i % 4) + '"]');
     await sleep(205);
   }
   assert.match(q.text(), /你的选手 DNA/);
   assert.equal(q.w.__qa.getState().history.length, 1);
+  assert.equal(q.w.__qa.getState().history[0].scoringVersion, 2);
+  assert.equal(q.w.__qa.getState().history[0].answers.length, 23);
   assert.equal(q.w.__qa.getState().draft, null);
   const entry = q.w.__qa.getState().history[0],
     result = q.w.__qa.score(entry.answers, q.w.__qa.DATA);
@@ -123,7 +147,7 @@ async function main() {
     .getAttribute("points");
   assert.ok(values && !values.includes("NaN"));
   log.push(
-    "20-question completion, result, radar values, history and unlock passed.",
+    "23-question completion including AIM specials, result, radar values, history and unlock passed.",
   );
   const before = performance.now();
   q.click('[data-action="share"]');
@@ -139,6 +163,8 @@ async function main() {
     bytes = canvas.native.toBuffer("image/png");
   assert.equal(bytes.readUInt32BE(16), 1080);
   assert.equal(bytes.readUInt32BE(20), 1920);
+  if (process.env.VALTI_QA_PREVIEW)
+    fs.writeFileSync(process.env.VALTI_QA_PREVIEW, bytes);
   const ms = Math.round(performance.now() - before);
   assert.ok(ms < 2000, "PNG generation " + ms + "ms");
   log.push(
@@ -183,6 +209,69 @@ async function main() {
     "All 35 personalized profiles contain 80–110 characters and a drawback.",
   );
   q.dom.window.close();
+  const oldAnswers = Array.from({ length: 20 }, (_, i) => i % 4);
+  const legacyEntry = {
+    id: "legacy-result",
+    time: 1793689200000,
+    answers: oldAnswers,
+  };
+  let legacy = boot(
+    JSON.stringify({ history: [legacyEntry], unlocked: ["p9763cc"] }),
+    "https://valti.test/#result/legacy-result",
+  );
+  assert.match(legacy.text(), /旧版 20 题结果/);
+  assert.equal(legacy.w.__qa.getState().history.length, 1);
+  assert.equal(legacy.w.__qa.getState().history[0].scoringVersion, 1);
+  const oldExpected = legacy.w.__qa.score(oldAnswers, legacy.w.__qa.DATA, 1);
+  assert.equal(
+    legacy.w.document.querySelector(".identity h1").textContent,
+    oldExpected.top.player.name,
+  );
+  legacy.click('[data-action="upgrade"]');
+  await sleep(20);
+  assert.match(legacy.text(), /中等靶平均成绩/);
+  assert.deepEqual(
+    Array.from(legacy.w.__qa.getState().draft.answers.slice(0, 20)),
+    oldAnswers,
+  );
+  assert.equal(legacy.w.__qa.getState().draft.index, 20);
+  legacy.click('[data-choice="0"]');
+  await sleep(210);
+  const upgradedDraft = legacy.w.localStorage.getItem("valti.v1");
+  legacy.dom.window.close();
+  legacy = boot(upgradedDraft, "https://valti.test/#quiz");
+  assert.match(legacy.text(), /急停首发/);
+  assert.equal(legacy.w.__qa.getState().draft.answers[20], 0);
+  legacy.click('[data-choice="0"]');
+  await sleep(210);
+  legacy.click('[data-choice="0"]');
+  await sleep(210);
+  assert.match(legacy.text(), /你的选手 DNA/);
+  assert.equal(legacy.w.__qa.getState().history.length, 2);
+  assert.equal(legacy.w.__qa.getState().history[0].scoringVersion, 2);
+  assert.equal(legacy.w.__qa.getState().history[1].scoringVersion, 1);
+  legacy.dom.window.close();
+  const oldDraft = {
+    id: "old-draft",
+    index: 19,
+    answers: [...oldAnswers.slice(0, 19), null],
+  };
+  const migrated = boot(
+    JSON.stringify({ draft: oldDraft }),
+    "https://valti.test/#quiz",
+  );
+  assert.equal(migrated.w.__qa.getState().draft.answers.length, 23);
+  assert.deepEqual(
+    Array.from(migrated.w.__qa.getState().draft.answers.slice(20)),
+    [null, null, null],
+  );
+  migrated.click('[data-choice="1"]');
+  await sleep(210);
+  assert.match(migrated.text(), /中等靶平均成绩/);
+  migrated.dom.window.close();
+  log.push(
+    "Legacy results stay intact; supplementing only 3 questions, new-draft reload and old-draft migration passed.",
+  );
   const denied = boot(null, "https://valti.test/#home", true);
   denied.click('[data-action="start"]');
   await sleep(20);
@@ -192,13 +281,10 @@ async function main() {
   denied.dom.window.close();
   log.push("Storage denial does not prevent testing.");
   const broken = boot("{broken");
-  assert.match(broken.text(), /20 题/);
+  assert.match(broken.text(), /23 题/);
   broken.dom.window.close();
   log.push("Corrupt storage recovers without crashing.");
-  const unsafe = data.replace(
-    '"TenZ"',
-    '"<img src=x onerror=alert(1)>"',
-  );
+  const unsafe = data.replace('"TenZ"', '"<img src=x onerror=alert(1)>"');
   const injected = boot(
     JSON.stringify({ unlocked: ["p9763cc"] }),
     "https://valti.test/#atlas",

@@ -3,45 +3,80 @@
   "seed": 20261103,
   "coverage": 35,
   "total": 35,
-  "peakPercent": 7.9,
+  "peakPercent": 10.1,
   "coverageTarget": 30,
   "peakTargetPercent": 15,
   "passesDistributionGoal": true,
+  "scoringVersion": 2,
+  "meanScores": {
+    "AIM": {
+      "before": 28.1,
+      "after": 59.66
+    },
+    "ENTRY": {
+      "before": 27.19,
+      "after": 60.45
+    },
+    "IGL": {
+      "before": 28.84,
+      "after": 62.23
+    },
+    "NERVE": {
+      "before": 28.09,
+      "after": 61.56
+    },
+    "FLEX": {
+      "before": 26.2,
+      "after": 59.94
+    },
+    "TEAM": {
+      "before": 29.66,
+      "after": 62.77
+    },
+    "GRIND": {
+      "before": 32.36,
+      "after": 64.62
+    },
+    "SHOW": {
+      "before": 30.18,
+      "after": 63.03
+    }
+  },
   "counts": {
-    "TenZ": 8,
-    "aspas": 3,
-    "Derke": 9,
-    "ZmjjKK": 79,
-    "Demon1": 11,
-    "Jinggg": 37,
-    "something": 32,
-    "Alfajer": 5,
-    "cNed": 30,
-    "Boaster": 63,
-    "Haodong": 32,
-    "FNS": 31,
+    "TenZ": 15,
+    "aspas": 2,
+    "Derke": 10,
+    "ZmjjKK": 53,
+    "Demon1": 8,
+    "Jinggg": 30,
+    "something": 31,
+    "Alfajer": 6,
+    "cNed": 11,
+    "Boaster": 101,
+    "Haodong": 52,
+    "FNS": 54,
     "C0M": 12,
     "Ethan": 33,
-    "nobody": 50,
-    "CHICHOO": 9,
-    "Chronicle": 8,
-    "nAts": 17,
-    "f0rsakeN": 78,
-    "TKzin": 35,
-    "erde": 18,
-    "Smoggy": 61,
-    "lukxo": 5,
-    "Darker": 38,
-    "Sato": 7,
-    "Neon": 10,
-    "BabyBay": 27,
-    "Brawk": 11,
-    "t3xture": 44,
-    "jawgemo": 18,
-    "Meteor": 18,
-    "WHZY": 21,
-    "S1mon": 53,
-    "siufatBB": 57,
-    "happywei": 30
+    "nobody": 32,
+    "CHICHOO": 10,
+    "Chronicle": 6,
+    "nAts": 20,
+    "f0rsakeN": 72,
+    "TKzin": 41,
+    "erde": 31,
+    "Smoggy": 73,
+    "lukxo": 8,
+    "Darker": 31,
+    "Sato": 15,
+    "Neon": 7,
+    "BabyBay": 15,
+    "Brawk": 4,
+    "t3xture": 34,
+    "jawgemo": 17,
+    "Meteor": 10,
+    "WHZY": 32,
+    "S1mon": 37,
+    "siufatBB": 68,
+    "happywei": 19
   }
 }
