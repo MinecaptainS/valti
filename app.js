@@ -183,7 +183,9 @@ if (typeof document !== "undefined") {
             "'": "&#39;",
           })[c],
       );
-  const KEY = "valti.v1",
+  const KEY = DATA.datasetRevision
+      ? "valti.dataset." + DATA.datasetRevision
+      : "valti.v1",
     roles = ["决斗", "控场", "道具", "自由人"];
   const traits = [
     "准星强迫症",
@@ -272,7 +274,7 @@ if (typeof document !== "undefined") {
   };
   function profile(p) {
     return (
-      story[p.name] +
+      (story[p.name] || roleVoice[p.role]) +
       "你把擅长的方式带进每一个关键回合，既有自己的节奏，也想让这一局真正赢下来。" +
       flaw[p.role]
     );
@@ -442,7 +444,7 @@ if (typeof document !== "undefined") {
   }
   function home() {
     page(
-      `<section class="hero"><div class="hero-copy"><div class="eyebrow">VALORANT PERSONALITY TEST</div><h1>你是<span class="game">VALORANT</span>的哪个选手<span style="color:var(--red)">？</span></h1><p class="subtitle">${DATA.questions.length} 题 · 约 3 分钟 · 35 位职业选手</p><p class="muted">关键一局，你会怎么打？<br>让你的选择，画出属于你的选手 DNA。</p><button class="btn primary" data-action="start">${state.draft ? "继续测试 · " + (state.draft.index + 1) + "/" + DATA.questions.length : "开始测试"} <span class="arrow" aria-hidden="true">↗</span></button>${state.draft ? '<div><button class="text-btn" data-action="restart">从第一题重新开始 →</button></div>' : ""}<p class="muted" style="font-size:10px;margin-top:16px">没有标准答案。按你的第一反应来。</p></div><div class="hero-art" aria-label="打法八维示意图"><div class="art-top"><span>PLAYER PROFILE / 001</span><strong>● AWAITING YOU</strong></div>${radar([92, 85, 35, 76, 82, 51, 68, 95], [65, 45, 75, 85, 55, 80, 90, 50])}<div class="art-name">WHO ARE <span>YOU?</span></div><div class="art-bottom"><span>8 DIMENSIONS</span><span>35 POSSIBILITIES ↗</span></div></div></section><section class="features" aria-label="测试介绍"><div class="feature"><span>01</span><div><h3>每一局，都有你的选择</h3><p>20 个实战情境 + 3 道枪法专项。</p></div></div><div class="feature"><span>02</span><div><h3>看见你的八维 DNA</h3><p>枪法到心态，你的风格不止一面。</p></div></div><div class="feature"><span>03</span><div><h3>解锁你的选手图鉴</h3><p>收集结果，保存专属选手分享卡。</p></div></div></section>`,
+      `<section class="hero"><div class="hero-copy"><div class="eyebrow">VALORANT PERSONALITY TEST</div><h1>你是<span class="game">VALORANT</span>的哪个选手<span style="color:var(--red)">？</span></h1><p class="subtitle">${DATA.questions.length} 题 · 约 ${Math.max(1, Math.ceil((DATA.questions.length * 7) / 60))} 分钟 · ${DATA.players.length} 位职业选手</p><p class="muted">关键一局，你会怎么打？<br>让你的选择，画出属于你的选手 DNA。</p><button class="btn primary" data-action="start">${state.draft ? "继续测试 · " + (state.draft.index + 1) + "/" + DATA.questions.length : "开始测试"} <span class="arrow" aria-hidden="true">↗</span></button>${state.draft ? '<div><button class="text-btn" data-action="restart">从第一题重新开始 →</button></div>' : ""}<p class="muted" style="font-size:10px;margin-top:16px">没有标准答案。按你的第一反应来。</p></div><div class="hero-art" aria-label="打法八维示意图"><div class="art-top"><span>PLAYER PROFILE / 001</span><strong>● AWAITING YOU</strong></div>${radar([92, 85, 35, 76, 82, 51, 68, 95], [65, 45, 75, 85, 55, 80, 90, 50])}<div class="art-name">WHO ARE <span>YOU?</span></div><div class="art-bottom"><span>8 DIMENSIONS</span><span>${DATA.players.length} POSSIBILITIES ↗</span></div></div></section><section class="features" aria-label="测试介绍"><div class="feature"><span>01</span><div><h3>每一局，都有你的选择</h3><p>${DATA.questions.filter((q) => q.kind !== "aim").length} 个实战情境 + ${DATA.questions.filter((q) => q.kind === "aim").length} 道枪法专项。</p></div></div><div class="feature"><span>02</span><div><h3>看见你的八维 DNA</h3><p>枪法到心态，你的风格不止一面。</p></div></div><div class="feature"><span>03</span><div><h3>解锁你的选手图鉴</h3><p>收集结果，保存专属选手分享卡。</p></div></div></section>`,
     );
   }
   function renderQuiz() {
@@ -502,6 +504,19 @@ if (typeof document !== "undefined") {
     location.hash = "result/" + entry.id;
   }
   function scene(a) {
+    if (DATA.datasetRevision) {
+      const moments = ["Q2", "Q3", "Q16"]
+        .map((id) => {
+          const index = DATA.questions.findIndex((q) => q.id === id);
+          return index >= 0
+            ? DATA.questions[index].options[a[index]]?.text
+            : null;
+        })
+        .filter(Boolean);
+      return moments.length
+        ? `镜头切到关键回合，你的选择是：${moments.join("；")}。这是属于你的打法现场。`
+        : "关键回合，按你在答卷中选定的节奏行动，打出属于自己的名场面。";
+    }
     const open = [
       "你举枪率先踩进 A 大",
       "你在默认位等到了第一条信息",
@@ -543,7 +558,7 @@ if (typeof document !== "undefined") {
         )}</div></div><div class="panel"><div class="section-label">YOUR PLAYSTYLE / 八维对照</div>${radar(
         r.pct,
         p.v.map((x) => x * 10),
-      )}<div class="legend"><span>你的选择</span><span class="ref">${esc(p.name)}</span></div><div class="dimension-list">${DATA.dims.map((d, i) => `<div>${esc(d.label)}<strong>${Math.round(r.pct[i])}</strong></div>`).join("")}</div></div><div class="panel"><div class="section-label">PLAYSTYLE INSIGHT / 打法解读</div><p class="profile">${esc(profile(p))}</p><p class="muted" style="font-size:11px;margin-top:16px">代表英雄：${esc(p.heroes)}</p></div><div class="panel"><div class="section-label">ROLE CONFESSION / 你的位置自白</div><h2>${esc(r.role)}</h2><p class="profile">${esc(roleVoice[r.role])}在${esc(r.role)}选手里，你最像 ${esc(r.roleBest.name)}，最不像 ${esc(r.roleLeast.name)}。这是节奏和选择的差异，不是实力排名。</p>${r.pct[2] >= 70 ? '<span class="role-tag">✦ 指挥潜质 · IGL ≥ 70</span>' : ""}</div><div class="panel scene"><div><div class="section-label">YOUR HIGHLIGHT</div><h2>你的名场面</h2></div><p>${esc(scene(entry.answers))}</p></div><div class="panel"><div class="section-label">BEST DUO / 最佳拍档</div><div class="partner-line">${shield(r.complement)}<strong>${esc(r.complement.name)}</strong></div><p class="profile">你们俩组队会把短板补成另一种强项：${esc(traits[r.pct.indexOf(Math.max(...r.pct))])}由你带头，他用${esc(keywords(r.complement)[0])}接住你的另一面。记得先沟通节奏，互补才不会变成各打各的。</p></div><div class="panel"><div class="section-label">COLLECTION / 本机解锁进度</div><h2>${state.unlocked.length}<span class="muted" style="font-size:18px"> / 35</span></h2><p class="muted" style="font-size:13px">每次完成测试，解锁你的主选手。混合结果会同时解锁两位选手。</p><a class="text-btn" href="#atlas">前往选手图鉴 ↗</a></div></section><div class="button-row"><button class="btn primary" data-action="share">保存分享卡 ↗</button>${r.version === 1 ? '<button class="btn" data-action="upgrade">补答 3 道枪法题</button>' : ""}<button class="btn" data-action="restart">再测一次</button><a class="btn ghost" href="#atlas">查看图鉴</a></div><p class="muted" style="font-size:10px;margin-top:18px">${r.version === 1 ? "这是旧版 20 题结果。补答 3 道枪法题，即可生成新版结果。" : "八维为风格指数，枪法结合专项自评；相似度不代表实力。"}所有结果仅保存在当前浏览器。</p>`,
+      )}<div class="legend"><span>你的选择</span><span class="ref">${esc(p.name)}</span></div><div class="dimension-list">${DATA.dims.map((d, i) => `<div>${esc(d.label)}<strong>${Math.round(r.pct[i])}</strong></div>`).join("")}</div></div><div class="panel"><div class="section-label">PLAYSTYLE INSIGHT / 打法解读</div><p class="profile">${esc(profile(p))}</p><p class="muted" style="font-size:11px;margin-top:16px">代表英雄：${esc(p.heroes)}</p></div><div class="panel"><div class="section-label">ROLE CONFESSION / 你的位置自白</div><h2>${esc(r.role)}</h2><p class="profile">${esc(roleVoice[r.role])}在${esc(r.role)}选手里，你最像 ${esc(r.roleBest.name)}，最不像 ${esc(r.roleLeast.name)}。这是节奏和选择的差异，不是实力排名。</p>${r.pct[2] >= 70 ? '<span class="role-tag">✦ 指挥潜质 · IGL ≥ 70</span>' : ""}</div><div class="panel scene"><div><div class="section-label">YOUR HIGHLIGHT</div><h2>你的名场面</h2></div><p>${esc(scene(entry.answers))}</p></div><div class="panel"><div class="section-label">BEST DUO / 最佳拍档</div><div class="partner-line">${shield(r.complement)}<strong>${esc(r.complement.name)}</strong></div><p class="profile">你们俩组队会把短板补成另一种强项：${esc(traits[r.pct.indexOf(Math.max(...r.pct))])}由你带头，他用${esc(keywords(r.complement)[0])}接住你的另一面。记得先沟通节奏，互补才不会变成各打各的。</p></div><div class="panel"><div class="section-label">COLLECTION / 本机解锁进度</div><h2>${state.unlocked.length}<span class="muted" style="font-size:18px"> / ${DATA.players.length}</span></h2><p class="muted" style="font-size:13px">每次完成测试，解锁你的主选手。混合结果会同时解锁两位选手。</p><a class="text-btn" href="#atlas">前往选手图鉴 ↗</a></div></section><div class="button-row"><button class="btn primary" data-action="share">保存分享卡 ↗</button>${r.version === 1 ? '<button class="btn" data-action="upgrade">补答 3 道枪法题</button>' : ""}<button class="btn" data-action="restart">再测一次</button><a class="btn ghost" href="#atlas">查看图鉴</a></div><p class="muted" style="font-size:10px;margin-top:18px">${r.version === 1 ? "这是旧版 20 题结果。补答 3 道枪法题，即可生成新版结果。" : "八维为风格指数，枪法结合专项自评；相似度不代表实力。"}所有结果仅保存在当前浏览器。</p>`,
     );
   }
   function atlas() {
@@ -551,7 +566,7 @@ if (typeof document !== "undefined") {
       (p) => filter === "全部" || p.role === filter,
     );
     page(
-      `<div class="page-head"><div><div class="eyebrow">PLAYER ARCHIVE</div><h1>选手图鉴<span style="color:var(--red)">.</span></h1><p class="muted">已解锁 ${state.unlocked.length} / 35 · 每次测试，遇见另一面的你</p></div><button class="btn ghost" data-action="start">去测试 ↗</button></div><div class="filters" aria-label="按主位置筛选">${["全部", ...roles].map((r) => `<button class="filter ${r === filter ? "active" : ""}" data-filter="${esc(r)}" aria-pressed="${r === filter}">${esc(r)}</button>`).join("")}</div><div class="atlas-grid">${players
+      `<div class="page-head"><div><div class="eyebrow">PLAYER ARCHIVE</div><h1>选手图鉴<span style="color:var(--red)">.</span></h1><p class="muted">已解锁 ${state.unlocked.length} / ${DATA.players.length} · 每次测试，遇见另一面的你</p></div><button class="btn ghost" data-action="start">去测试 ↗</button></div><div class="filters" aria-label="按主位置筛选">${["全部", ...roles].map((r) => `<button class="filter ${r === filter ? "active" : ""}" data-filter="${esc(r)}" aria-pressed="${r === filter}">${esc(r)}</button>`).join("")}</div><div class="atlas-grid">${players
         .map((p) => {
           const unlocked = state.unlocked.includes(p.id);
           return `<button class="player-tile ${unlocked ? "" : "locked"}" data-player="${esc(p.id)}" aria-label="${unlocked ? esc(p.name) : "未解锁选手"}">${unlocked ? shield(p) : '<div class="silhouette" aria-hidden="true"></div>'}<strong>${unlocked ? esc(p.name) : "?"}</strong><small>${unlocked ? esc(p.role) + (p.igl ? " · 指挥" : "") : "等待解锁"}</small></button>`;
@@ -566,7 +581,7 @@ if (typeof document !== "undefined") {
           ? `<div class="history-list">${state.history
               .map((h) => {
                 const r = scoreEntry(h, DATA);
-                return `<button class="history-item" data-result="${esc(h.id)}">${shield(r.top.player)}<span class="grow"><strong>${esc(r.top.player.name)}</strong><small>${esc(new Date(h.time).toLocaleString("zh-CN", { hour12: false }))} · ${esc(r.role)} · ${r.version === 1 ? "旧版 20 题" : "23 题 · 含枪法专项"}</small></span><span class="score">${r.similarity}%</span><span aria-hidden="true">↗</span></button>`;
+                return `<button class="history-item" data-result="${esc(h.id)}">${shield(r.top.player)}<span class="grow"><strong>${esc(r.top.player.name)}</strong><small>${esc(new Date(h.time).toLocaleString("zh-CN", { hour12: false }))} · ${esc(r.role)} · ${r.version === 1 ? "旧版 20 题" : r.questionCount + " 题 · 含枪法专项"}</small></span><span class="score">${r.similarity}%</span><span aria-hidden="true">↗</span></button>`;
               })
               .join("")}</div>`
           : `<div class="panel empty"><h2>你的第一份选手 DNA，还在等你</h2><p>完成 ${DATA.questions.length} 道题，结果会自动出现在这里。</p><button class="btn primary" data-action="start">开始测试 →</button></div>`
@@ -643,6 +658,17 @@ if (typeof document !== "undefined") {
     if (line) ctx.fillText(line, x, y);
     return y;
   }
+  function canvasLineCount(ctx, text, width) {
+    let count = 1,
+      line = "";
+    for (const character of text) {
+      if (ctx.measureText(line + character).width > width) {
+        count++;
+        line = character;
+      } else line += character;
+    }
+    return count;
+  }
   function makeShareCanvas(r) {
     const c = document.createElement("canvas");
     c.width = 1080;
@@ -683,7 +709,7 @@ if (typeof document !== "undefined") {
     ctx.textAlign = "left";
     ctx.font = '25px "Microsoft YaHei",sans-serif';
     ctx.fillStyle = "#e6eef6";
-    ctx.fillText(t.name, 280, 310);
+    ctx.fillText(t.name, 280, 310, 700);
     ctx.fillStyle = "#8b9db0";
     ctx.fillText(p.role + (p.igl ? " · 指挥" : ""), 280, 361);
     ctx.fillStyle = "#8b9db0";
@@ -693,11 +719,24 @@ if (typeof document !== "undefined") {
     let size = 115;
     do {
       ctx.font = `italic bold ${size--}px system-ui,sans-serif`;
-    } while (ctx.measureText(p.name).width > 880 && size > 40);
+    } while (ctx.measureText(p.name).width > 880 && size > 24);
     ctx.fillText(p.name, 94, 580);
     ctx.fillStyle = "#e6eef6";
-    ctx.font = '22px "Microsoft YaHei",sans-serif';
-    const noteBottom = canvasText(ctx, p.note, 120, 635, 860, 30);
+    let noteSize = 22;
+    ctx.font = noteSize + 'px "Microsoft YaHei",sans-serif';
+    while (canvasLineCount(ctx, p.note, 860) > 2 && noteSize > 16) {
+      noteSize--;
+      ctx.font = noteSize + 'px "Microsoft YaHei",sans-serif';
+    }
+    const longNote = canvasLineCount(ctx, p.note, 860) > 2;
+    const noteBottom = canvasText(
+      ctx,
+      p.note,
+      120,
+      longNote ? 625 : 635,
+      860,
+      longNote ? 22 : 30,
+    );
     ctx.fillStyle = "#ff4655";
     ctx.fillRect(100, 615, 3, noteBottom - 608);
     ctx.fillStyle = "#ff4655";
@@ -749,7 +788,14 @@ if (typeof document !== "undefined") {
     ctx.fillText("YOUR PLAY. YOUR IDENTITY.", 100, 1773);
     ctx.font = '20px "Microsoft YaHei",sans-serif';
     ctx.fillStyle = "#8b9db0";
-    ctx.fillText(r.questionCount + " 题 · 8 个维度 · 35 位职业选手", 100, 1815);
+    ctx.fillText(
+      r.questionCount +
+        " 题 · 8 个维度 · " +
+        DATA.players.length +
+        " 位职业选手",
+      100,
+      1815,
+    );
     ctx.textAlign = "right";
     ctx.font = '17px "Microsoft YaHei",sans-serif';
     ctx.fillText("非官方粉丝作品 / 仅供娱乐", 980, 1845);
