@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const data = require("../data.js");
+// Frozen baseline keeps regression checks useful after editing the active dataset.
+const data = require("./fixtures/baseline-data.json");
 const {
   score,
   center,
@@ -13,7 +14,7 @@ const {
 } = require("../app.js");
 const { createHash } = require("node:crypto");
 
-test("original handoff data and exact question weights remain unchanged", () => {
+test("baseline fixture retains original handoff data and question weights", () => {
   const hashes = {
     players: "8fb955386f8c1fd4729efe8b792f2083bc05c207e40a1bb175765f832003f56c",
     teams: "ae8d0fcb2f259f04ecea61ab8ebb25804d274b23ab54ce4322f5c384a88d738c",

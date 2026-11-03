@@ -8,6 +8,14 @@
 
 本地记录按浏览器与来源分别保存；本地文件版和网站版不共享记录。浏览器限制本地存储时仍可完成测试，但无法保证刷新后恢复。
 
+## 本机调试器
+
+Windows 双击 **start-debugger.cmd**，或执行 `node tools/debugger/server.cjs`，再打开 **http://127.0.0.1:4174/**。可编辑题目、权重、选手和队伍，预览结果、运行随机分布检查，以及导入导出 JSON。仅需 Node.js 22+，不需要 npm 安装。
+
+调试服务只在本机监听。草稿与备份保存在被 Git 忽略的 `.valti-debug/`；只有点击“写入本地数据”才修改 `data.js`，不会自动推送。完整操作见 [调试器说明](tools/debugger/README.md)。
+
+公众网站发布前运行 `node scripts/package-public.cjs`，只部署生成的 **dist/**；该目录不包含调试器。仓库源码仍然公开。
+
 ## 功能
 
 - 固定 23 题、每题四个选项，180ms 自动切题，支持回退修改和键盘 1–4。
@@ -23,7 +31,7 @@
 
 ## 数据与算法
 
-`data.js` 中的 `DATA` 集中保存原始 35 位选手、39 支队伍、八维定义、23 道题和新版计分配置。选手所有字段、向量、队伍数据，以及前 20 题的顺序、选项文字、分值和 Q1 位置完整保留。队伍是交接时的数据快照，不表示实时阵容。
+默认 `data.js` 中的 `DATA` 集中保存原始 35 位选手、39 支队伍、八维定义、23 道题和新版计分配置。默认选手数据与前 20 题保持交接版本；调试器可以编辑当前配置。原始默认配置另存于测试夹具，供算法回归检查使用。队伍是交接时的数据快照，不表示实时阵容。
 
 ### 新版分数（scoringVersion: 2）
 
@@ -45,6 +53,7 @@ Node.js 22 或更新版本下，无需安装依赖即可运行：
 
 ```sh
 node --test tests/scoring.test.cjs
+node --test tests/active-data.test.cjs tests/debugger.test.cjs
 node tests/distribution.cjs
 ```
 

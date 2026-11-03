@@ -16,7 +16,11 @@ jobs:
         run: |
           node --check app.js
           node --check data.js
+          node --check tools/debugger/server.cjs
+          node --check tools/debugger/client.js
       - name: Verify data and scoring
-        run: node --test tests/scoring.test.cjs
+        run: node --test tests/scoring.test.cjs tests/active-data.test.cjs tests/debugger.test.cjs
+      - name: Package only public website files
+        run: node scripts/package-public.cjs
       - name: Report reproducible distribution
         run: node tests/distribution.cjs

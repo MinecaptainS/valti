@@ -1,0 +1,1804 @@
+{
+  "version": 3,
+  "dims": [
+    {
+      "key": "AIM",
+      "label": "枪法"
+    },
+    {
+      "key": "ENTRY",
+      "label": "突破"
+    },
+    {
+      "key": "IGL",
+      "label": "指挥"
+    },
+    {
+      "key": "NERVE",
+      "label": "心态"
+    },
+    {
+      "key": "FLEX",
+      "label": "花活"
+    },
+    {
+      "key": "TEAM",
+      "label": "团队"
+    },
+    {
+      "key": "GRIND",
+      "label": "苦练"
+    },
+    {
+      "key": "SHOW",
+      "label": "表现"
+    }
+  ],
+  "exportedAt": "2026-11-03T07:01:16.658Z",
+  "teams": [
+    {
+      "id": "edg",
+      "name": "EDward Gaming",
+      "abbr": "EDG",
+      "color": "#2b2b2b",
+      "logo": ""
+    },
+    {
+      "id": "te",
+      "name": "Trace Esports",
+      "abbr": "TE",
+      "color": "#d92b3a",
+      "logo": ""
+    },
+    {
+      "id": "wol",
+      "name": "Wolves Esports",
+      "abbr": "WOL",
+      "color": "#f2b01e",
+      "logo": ""
+    },
+    {
+      "id": "blg",
+      "name": "Bilibili Gaming",
+      "abbr": "BLG",
+      "color": "#3d7bff",
+      "logo": ""
+    },
+    {
+      "id": "jdg",
+      "name": "JDG Esports",
+      "abbr": "JDG",
+      "color": "#c8102e",
+      "logo": ""
+    },
+    {
+      "id": "fpx",
+      "name": "FunPlus Phoenix",
+      "abbr": "FPX",
+      "color": "#d6001c",
+      "logo": ""
+    },
+    {
+      "id": "nova",
+      "name": "Nova Esports",
+      "abbr": "NOVA",
+      "color": "#7a3fb5",
+      "logo": ""
+    },
+    {
+      "id": "tyl",
+      "name": "TYLOO",
+      "abbr": "TYL",
+      "color": "#e60012",
+      "logo": ""
+    },
+    {
+      "id": "xlg",
+      "name": "XLG Esports",
+      "abbr": "XLG",
+      "color": "#00c2a8",
+      "logo": ""
+    },
+    {
+      "id": "ag",
+      "name": "All Gamers",
+      "abbr": "AG",
+      "color": "#e60012",
+      "logo": ""
+    },
+    {
+      "id": "prx",
+      "name": "Paper Rex",
+      "abbr": "PRX",
+      "color": "#ff3d5a",
+      "logo": ""
+    },
+    {
+      "id": "drx",
+      "name": "DRX",
+      "abbr": "DRX",
+      "color": "#1f5fff",
+      "logo": ""
+    },
+    {
+      "id": "t1",
+      "name": "T1",
+      "abbr": "T1",
+      "color": "#e2012d",
+      "logo": ""
+    },
+    {
+      "id": "gen",
+      "name": "Gen.G",
+      "abbr": "GEN",
+      "color": "#c9a227",
+      "logo": ""
+    },
+    {
+      "id": "zeta",
+      "name": "ZETA DIVISION",
+      "abbr": "ZETA",
+      "color": "#e60023",
+      "logo": ""
+    },
+    {
+      "id": "dfm",
+      "name": "DetonatioN FocusMe",
+      "abbr": "DFM",
+      "color": "#e60012",
+      "logo": ""
+    },
+    {
+      "id": "rrq",
+      "name": "Rex Regum Qeon",
+      "abbr": "RRQ",
+      "color": "#f5b301",
+      "logo": ""
+    },
+    {
+      "id": "tln",
+      "name": "Talon Esports",
+      "abbr": "TLN",
+      "color": "#e4002b",
+      "logo": ""
+    },
+    {
+      "id": "ge",
+      "name": "Global Esports",
+      "abbr": "GE",
+      "color": "#00a3e0",
+      "logo": ""
+    },
+    {
+      "id": "fnc",
+      "name": "Fnatic",
+      "abbr": "FNC",
+      "color": "#ff5900",
+      "logo": ""
+    },
+    {
+      "id": "vit",
+      "name": "Team Vitality",
+      "abbr": "VIT",
+      "color": "#f7e017",
+      "logo": ""
+    },
+    {
+      "id": "th",
+      "name": "Team Heretics",
+      "abbr": "TH",
+      "color": "#00d1b2",
+      "logo": ""
+    },
+    {
+      "id": "kc",
+      "name": "Karmine Corp",
+      "abbr": "KC",
+      "color": "#0a84ff",
+      "logo": ""
+    },
+    {
+      "id": "fut",
+      "name": "FUT Esports",
+      "abbr": "FUT",
+      "color": "#c8102e",
+      "logo": ""
+    },
+    {
+      "id": "gx",
+      "name": "GIANTX",
+      "abbr": "GX",
+      "color": "#00b2ff",
+      "logo": ""
+    },
+    {
+      "id": "navi",
+      "name": "Natus Vincere",
+      "abbr": "NAVI",
+      "color": "#ffe500",
+      "logo": ""
+    },
+    {
+      "id": "bbl",
+      "name": "BBL Esports",
+      "abbr": "BBL",
+      "color": "#e30613",
+      "logo": ""
+    },
+    {
+      "id": "sen",
+      "name": "Sentinels",
+      "abbr": "SEN",
+      "color": "#e03c31",
+      "logo": ""
+    },
+    {
+      "id": "nrg",
+      "name": "NRG",
+      "abbr": "NRG",
+      "color": "#d6001c",
+      "logo": ""
+    },
+    {
+      "id": "eg",
+      "name": "Evil Geniuses",
+      "abbr": "EG",
+      "color": "#0033a0",
+      "logo": ""
+    },
+    {
+      "id": "100t",
+      "name": "100 Thieves",
+      "abbr": "100T",
+      "color": "#e4002b",
+      "logo": ""
+    },
+    {
+      "id": "c9",
+      "name": "Cloud9",
+      "abbr": "C9",
+      "color": "#00aeef",
+      "logo": ""
+    },
+    {
+      "id": "g2",
+      "name": "G2 Esports",
+      "abbr": "G2",
+      "color": "#ff2d2d",
+      "logo": ""
+    },
+    {
+      "id": "tl",
+      "name": "Team Liquid",
+      "abbr": "TL",
+      "color": "#0e2a66",
+      "logo": ""
+    },
+    {
+      "id": "loud",
+      "name": "LOUD",
+      "abbr": "LOUD",
+      "color": "#00e676",
+      "logo": ""
+    },
+    {
+      "id": "mibr",
+      "name": "MIBR",
+      "abbr": "MIBR",
+      "color": "#c8102e",
+      "logo": ""
+    },
+    {
+      "id": "fur",
+      "name": "FURIA",
+      "abbr": "FUR",
+      "color": "#2b2b2b",
+      "logo": ""
+    },
+    {
+      "id": "kru",
+      "name": "KRÜ Esports",
+      "abbr": "KRÜ",
+      "color": "#00a9e0",
+      "logo": ""
+    },
+    {
+      "id": "lev",
+      "name": "Leviatán",
+      "abbr": "LEV",
+      "color": "#0b4ea2",
+      "logo": ""
+    }
+  ],
+  "players": [
+    {
+      "id": "p9763cc",
+      "name": "TenZ",
+      "role": "决斗",
+      "sub": "自由人",
+      "igl": false,
+      "team": "sen",
+      "heroes": "捷风 / 雷兹",
+      "note": "你做得到别人练不出来的动作，而且你知道这一点。",
+      "v": [
+        10,
+        7,
+        3,
+        7,
+        9,
+        5,
+        8,
+        8
+      ]
+    },
+    {
+      "id": "pjawlgs",
+      "name": "aspas",
+      "role": "决斗",
+      "sub": "",
+      "igl": false,
+      "team": "mibr",
+      "heroes": "捷风",
+      "note": "牢帕啊",
+      "v": [
+        9,
+        9,
+        2,
+        9,
+        10,
+        3,
+        8,
+        7
+      ]
+    },
+    {
+      "id": "p1k5ww0",
+      "name": "Derke",
+      "role": "决斗",
+      "sub": "",
+      "igl": false,
+      "team": "vit",
+      "heroes": "捷风 / 雷兹",
+      "note": "德克士虾仁饭",
+      "v": [
+        10,
+        4,
+        4,
+        8,
+        6,
+        5,
+        9,
+        7.5
+      ]
+    },
+    {
+      "id": "pyhlw5g",
+      "name": "ZmjjKK",
+      "role": "决斗",
+      "sub": "",
+      "igl": false,
+      "team": "edg",
+      "heroes": "捷风 / 雷兹",
+      "note": "谁是大明星！！！",
+      "v": [
+        8,
+        10,
+        4,
+        9,
+        3,
+        3,
+        8,
+        10
+      ]
+    },
+    {
+      "id": "pzgwem9",
+      "name": "Demon1",
+      "role": "决斗",
+      "sub": "",
+      "igl": false,
+      "team": "eg",
+      "heroes": "捷风 / 尚勃勒",
+      "note": "昙花一现的天才。I'M THE FUCKING BEST",
+      "v": [
+        10,
+        7,
+        2,
+        10,
+        3,
+        1,
+        8.5,
+        10
+      ]
+    },
+    {
+      "id": "pqkmdfg",
+      "name": "Jinggg",
+      "role": "决斗",
+      "sub": "",
+      "igl": false,
+      "team": "prx",
+      "heroes": "雷兹",
+      "note": "沙丘老",
+      "v": [
+        8,
+        10,
+        2,
+        7,
+        10,
+        3,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "pke5m79",
+      "name": "something",
+      "role": "决斗",
+      "sub": "",
+      "igl": false,
+      "team": "prx",
+      "heroes": "捷风",
+      "note": "不知道，听说能边9个人就来了",
+      "v": [
+        9,
+        8,
+        3,
+        5,
+        6,
+        8,
+        8,
+        4
+      ]
+    },
+    {
+      "id": "p4cx8c6",
+      "name": "Alfajer",
+      "role": "决斗",
+      "sub": "自由人",
+      "igl": false,
+      "team": "fnc",
+      "heroes": "捷风 / 尚勃勒",
+      "note": "你什么位置都能打，而且打得像练了很久。",
+      "v": [
+        10,
+        8,
+        4,
+        8,
+        8,
+        7,
+        8,
+        4
+      ]
+    },
+    {
+      "id": "pzbb3ja",
+      "name": "cNed",
+      "role": "决斗",
+      "sub": "",
+      "igl": false,
+      "team": "",
+      "heroes": "捷风",
+      "note": "你赌的是那一枪，而且你敢在赛点赌。",
+      "v": [
+        9,
+        9,
+        3,
+        9,
+        4,
+        4,
+        7,
+        6
+      ]
+    },
+    {
+      "id": "prqyv8o",
+      "name": "Boaster",
+      "role": "控场",
+      "sub": "道具",
+      "igl": true,
+      "team": "fnc",
+      "heroes": "幽影 / 星礈",
+      "note": "NRG! NRG! WE ARE COMING FOR YOU!!!",
+      "v": [
+        1,
+        2,
+        10,
+        10,
+        3,
+        10,
+        6,
+        10
+      ]
+    },
+    {
+      "id": "p0j6ojt",
+      "name": "Haodong",
+      "role": "控场",
+      "sub": "",
+      "igl": true,
+      "team": "edg",
+      "heroes": "幽影 / 炼狱",
+      "note": "你不抢镜，但队伍每一次转点都经过你。",
+      "v": [
+        2,
+        2,
+        8.5,
+        8,
+        5,
+        9,
+        8,
+        4
+      ]
+    },
+    {
+      "id": "pkavrx5",
+      "name": "FNS",
+      "role": "道具",
+      "sub": "控场",
+      "igl": true,
+      "team": "nrg",
+      "heroes": "猎枭 / 铁臂",
+      "note": "There is one man, that is capable to leading this nation to victory again -- S1mon",
+      "v": [
+        2,
+        2,
+        10,
+        9,
+        4,
+        8,
+        9,
+        3
+      ]
+    },
+    {
+      "id": "pymk6h2",
+      "name": "C0M",
+      "role": "道具",
+      "sub": "",
+      "igl": false,
+      "team": "eg",
+      "heroes": "猎枭 / KAY/O",
+      "note": "你让队友的枪法看起来更好。",
+      "v": [
+        7,
+        4,
+        6,
+        7,
+        6,
+        10,
+        8,
+        4
+      ]
+    },
+    {
+      "id": "pm8o0zu",
+      "name": "Ethan",
+      "role": "道具",
+      "sub": "自由人",
+      "igl": true,
+      "team": "nrg",
+      "heroes": "KAY/O / 斯凯",
+      "note": "唯一双冠王。学长我们错了。",
+      "v": [
+        3,
+        2,
+        6,
+        7,
+        3,
+        10,
+        8,
+        6
+      ]
+    },
+    {
+      "id": "p7bvos9",
+      "name": "nobody",
+      "role": "道具",
+      "sub": "",
+      "igl": true,
+      "team": "edg",
+      "heroes": "猎枭 / 斯凯",
+      "note": "大哥你们太坑了。",
+      "v": [
+        5,
+        2,
+        10,
+        10,
+        4,
+        7,
+        9,
+        3
+      ]
+    },
+    {
+      "id": "piuaq8a",
+      "name": "CHICHOO",
+      "role": "自由人",
+      "sub": "",
+      "igl": false,
+      "team": "edg",
+      "heroes": "奇乐 / 蝰蛇",
+      "note": "求神不如球神",
+      "v": [
+        10,
+        2,
+        3,
+        9,
+        4,
+        7,
+        10,
+        2
+      ]
+    },
+    {
+      "id": "p0jx3yo",
+      "name": "Chronicle",
+      "role": "自由人",
+      "sub": "控场",
+      "igl": false,
+      "team": "vit",
+      "heroes": "蝰蛇/ 猎枭 / 奇乐",
+      "note": "三冠，四亚，小王子",
+      "v": [
+        9,
+        3,
+        3,
+        10,
+        8,
+        6,
+        10,
+        5
+      ]
+    },
+    {
+      "id": "puazr5d",
+      "name": "nAts",
+      "role": "自由人",
+      "sub": "控场",
+      "igl": true,
+      "team": "tl",
+      "heroes": "零 / 蝰蛇",
+      "note": "老霸道了",
+      "v": [
+        4,
+        3,
+        10,
+        10,
+        6,
+        10,
+        8,
+        7
+      ]
+    },
+    {
+      "id": "p10prsl",
+      "name": "f0rsakeN",
+      "role": "自由人",
+      "sub": "决斗",
+      "igl": false,
+      "team": "prx",
+      "heroes": "雷兹 / 芮娜 / 夜露",
+      "note": "全角色之人",
+      "v": [
+        8,
+        2,
+        3,
+        4,
+        10,
+        6,
+        6,
+        10
+      ]
+    },
+    {
+      "id": "p47v03f",
+      "name": "TKzin",
+      "role": "决斗",
+      "sub": "自由人",
+      "igl": false,
+      "team": "loud",
+      "heroes": "霓虹/遐思",
+      "note": "错哥我们约了",
+      "v": [
+        10,
+        8,
+        3,
+        7,
+        7.5,
+        2,
+        8,
+        10
+      ]
+    },
+    {
+      "id": "pq2r6mj",
+      "name": "erde",
+      "role": "控场",
+      "sub": "道具",
+      "igl": true,
+      "team": "lev",
+      "heroes": "幽影/显着",
+      "note": "最年轻的FMVP冠军指挥",
+      "v": [
+        8,
+        2,
+        7,
+        4,
+        8,
+        8,
+        7,
+        2.5
+      ]
+    },
+    {
+      "id": "p1261nc",
+      "name": "Smoggy",
+      "role": "控场",
+      "sub": "决斗",
+      "igl": false,
+      "team": "edg",
+      "heroes": "幽影/雷兹",
+      "note": "听我说听我说，我给警家烟可以吗。",
+      "v": [
+        10,
+        2,
+        7,
+        2.5,
+        1,
+        8,
+        9,
+        2
+      ]
+    },
+    {
+      "id": "p5sifvh",
+      "name": "lukxo",
+      "role": "自由人",
+      "sub": "",
+      "igl": false,
+      "team": "lev",
+      "heroes": "尚伯勒",
+      "note": "WHY ALWAYS ME?",
+      "v": [
+        10,
+        2,
+        2,
+        8,
+        7,
+        3,
+        8.5,
+        3.5
+      ]
+    },
+    {
+      "id": "pf04133",
+      "name": "Darker",
+      "role": "控场",
+      "sub": "自由人",
+      "igl": false,
+      "team": "loud",
+      "heroes": "幽影/蝰蛇",
+      "note": "谁看不起他谁就会被惩罚",
+      "v": [
+        9,
+        2,
+        4,
+        8,
+        2.5,
+        8.5,
+        7.5,
+        8.5
+      ]
+    },
+    {
+      "id": "pootgkd",
+      "name": "Sato",
+      "role": "决斗",
+      "sub": "自由人",
+      "igl": false,
+      "team": "lev",
+      "heroes": "不死鸟/夜露/尚博勒",
+      "note": "已转会",
+      "v": [
+        10,
+        5,
+        2.5,
+        8,
+        6,
+        3.5,
+        8,
+        9
+      ]
+    },
+    {
+      "id": "p755hop",
+      "name": "Neon",
+      "role": "决斗",
+      "sub": "自由人",
+      "igl": false,
+      "team": "lev",
+      "heroes": "尚博勒/捷风",
+      "note": "伦敦大师赛MVP",
+      "v": [
+        10,
+        9,
+        3,
+        8,
+        6,
+        4.5,
+        8.5,
+        3
+      ]
+    },
+    {
+      "id": "p9nyedt",
+      "name": "BabyBay",
+      "role": "自由人",
+      "sub": "",
+      "igl": false,
+      "team": "g2",
+      "heroes": "尚博勒/维斯",
+      "note": "最老的来了",
+      "v": [
+        8,
+        3,
+        3,
+        10,
+        3.5,
+        8,
+        8,
+        4
+      ]
+    },
+    {
+      "id": "p5kcp5q",
+      "name": "Brawk",
+      "role": "道具",
+      "sub": "自由人",
+      "igl": false,
+      "team": "nrg",
+      "heroes": "猎枭/维斯",
+      "note": "奥丁勾来了你们聊",
+      "v": [
+        7,
+        3,
+        3,
+        8,
+        10,
+        9,
+        8,
+        3.5
+      ]
+    },
+    {
+      "id": "psr2ewg",
+      "name": "t3xture",
+      "role": "决斗",
+      "sub": "自由人",
+      "igl": false,
+      "team": "gen",
+      "heroes": "捷风/尚博勒",
+      "note": "移动补偿这一块",
+      "v": [
+        10,
+        9,
+        3,
+        9,
+        1,
+        2.5,
+        8.5,
+        2
+      ]
+    },
+    {
+      "id": "p6eys9h",
+      "name": "jawgemo",
+      "role": "决斗",
+      "sub": "",
+      "igl": false,
+      "team": "g2",
+      "heroes": "雷兹/霓虹",
+      "note": "馍哥！",
+      "v": [
+        8.5,
+        9,
+        3,
+        7,
+        9,
+        4,
+        10,
+        6
+      ]
+    },
+    {
+      "id": "pxhcy17",
+      "name": "Meteor",
+      "role": "自由人",
+      "sub": "",
+      "igl": false,
+      "team": "t1",
+      "heroes": "尚伯勒/蝰蛇",
+      "note": "给他一把猎头，他能摸到平壤...",
+      "v": [
+        9,
+        2,
+        3,
+        8.5,
+        9.5,
+        3,
+        8,
+        2
+      ]
+    },
+    {
+      "id": "pgr2rwk",
+      "name": "WHZY",
+      "role": "决斗",
+      "sub": "",
+      "igl": false,
+      "team": "blg",
+      "heroes": "捷风/雷兹",
+      "note": "谁是大主播！",
+      "v": [
+        7.5,
+        8,
+        2.5,
+        10,
+        8,
+        3,
+        9,
+        10
+      ]
+    },
+    {
+      "id": "pwrdymr",
+      "name": "S1mon",
+      "role": "道具",
+      "sub": "控场",
+      "igl": true,
+      "team": "edg",
+      "heroes": "KO/黑梦/斯凯",
+      "note": "你有全面封锁！",
+      "v": [
+        3.5,
+        2,
+        8,
+        3,
+        7.5,
+        10,
+        4,
+        2
+      ]
+    },
+    {
+      "id": "pjjifok",
+      "name": "siufatBB",
+      "role": "道具",
+      "sub": "",
+      "igl": true,
+      "team": "tyl",
+      "heroes": "猎枭/黑梦",
+      "note": "速发b老师，我还记得你",
+      "v": [
+        4,
+        2,
+        5,
+        9,
+        7.5,
+        8.5,
+        10,
+        10
+      ]
+    },
+    {
+      "id": "p2hwvjs",
+      "name": "happywei",
+      "role": "自由人",
+      "sub": "",
+      "igl": false,
+      "team": "xlg",
+      "heroes": "零/尚博勒",
+      "note": "人夫哥加油",
+      "v": [
+        10,
+        2,
+        5,
+        8.5,
+        1,
+        7,
+        10,
+        2.5
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q1",
+      "text": "你主要玩的英雄是",
+      "options": [
+        {
+          "text": "决斗：捷风 / 雷兹 / 霓虹 —— 我先开枪，剩下交给手",
+          "weights": {
+            "ENTRY": 2,
+            "AIM": 1
+          },
+          "role": "决斗"
+        },
+        {
+          "text": "控场：幽影 / 蝰蛇 / 炼狱 —— 烟和墙我来铺，节奏我控",
+          "weights": {
+            "IGL": 2,
+            "TEAM": 1
+          },
+          "role": "控场"
+        },
+        {
+          "text": "道具：猎枭 / 黑梦 / 斯凯 —— 信息我给，人你们杀",
+          "weights": {
+            "TEAM": 2,
+            "IGL": 1
+          },
+          "role": "道具"
+        },
+        {
+          "text": "自由人：奇乐 / 零 / 尚勃勒 —— 后方兜底，我不急",
+          "weights": {
+            "NERVE": 2,
+            "FLEX": 1
+          },
+          "role": "自由人"
+        }
+      ]
+    },
+    {
+      "id": "Q2",
+      "text": "手枪局 0:0，开局十秒你已经在",
+      "options": [
+        {
+          "text": "A 大门口，先打一枪再说",
+          "weights": {
+            "ENTRY": 2,
+            "AIM": 1
+          }
+        },
+        {
+          "text": "默认位架枪，等队友给信息",
+          "weights": {
+            "NERVE": 2,
+            "TEAM": 1
+          }
+        },
+        {
+          "text": "语音里分人：谁看哪、谁先探",
+          "weights": {
+            "IGL": 2,
+            "TEAM": 1
+          }
+        },
+        {
+          "text": "一个平时没人站的非常规位",
+          "weights": {
+            "FLEX": 2,
+            "SHOW": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q3",
+      "text": "1v3 残局，心跳 140",
+      "options": [
+        {
+          "text": "拆分枪线，直接冲出去杀人（晚安焰火已经点燃！）",
+          "weights": {
+            "ENTRY": 2,
+            "AIM": 1
+          }
+        },
+        {
+          "text": "整理信息进行转点或者抓单，用思路取胜",
+          "weights": {
+            "IGL": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "用自己的技能来进行一些出其不意的操作（强行顶吗？）",
+          "weights": {
+            "FLEX": 2,
+            "SHOW": 1
+          }
+        },
+        {
+          "text": "已经在想赢了之后怎么在语音里喊",
+          "weights": {
+            "SHOW": 2,
+            "ENTRY": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q4",
+      "text": "到馆第一件事",
+      "options": [
+        {
+          "text": "死斗半小时，把手打热",
+          "weights": {
+            "GRIND": 2,
+            "AIM": 1
+          }
+        },
+        {
+          "text": "试新角色的技能连招",
+          "weights": {
+            "FLEX": 2,
+            "GRIND": 1
+          }
+        },
+        {
+          "text": "直接排一把，用比赛热身",
+          "weights": {
+            "ENTRY": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "翻开复盘笔记，过两个固定点位",
+          "weights": {
+            "IGL": 2,
+            "GRIND": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q5",
+      "text": "经济局，全队只剩 800 块",
+      "options": [
+        {
+          "text": "全甲手枪，赌一把",
+          "weights": {
+            "ENTRY": 2,
+            "AIM": 1
+          }
+        },
+        {
+          "text": "买技能给队友做球，我当工具人",
+          "weights": {
+            "TEAM": 2,
+            "IGL": 1
+          }
+        },
+        {
+          "text": "存钱，等下把给大哥起把大枪",
+          "weights": {
+            "GRIND": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "买把短枪去偷人，赚了血赚",
+          "weights": {
+            "FLEX": 2,
+            "SHOW": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q6",
+      "text": "队友开麦：「你这水平像 bot。」",
+      "options": [
+        {
+          "text": "直接回怼，气势不能输",
+          "weights": {
+            "SHOW": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "不回，用下一回合的表现说话",
+          "weights": {
+            "NERVE": 2,
+            "AIM": 1
+          }
+        },
+        {
+          "text": "开麦沟通，把队伍节奏拉回来",
+          "weights": {
+            "IGL": 2,
+            "TEAM": 1
+          }
+        },
+        {
+          "text": "默默换角色，去补队伍最缺的位置",
+          "weights": {
+            "TEAM": 2,
+            "GRIND": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q7",
+      "text": "今晚已经三连败",
+      "options": [
+        {
+          "text": "越输越上头，今天必须赢一把",
+          "weights": {
+            "ENTRY": 2,
+            "SHOW": 1
+          }
+        },
+        {
+          "text": "关掉游戏，去看一局自己的录像",
+          "weights": {
+            "GRIND": 2,
+            "IGL": 1
+          }
+        },
+        {
+          "text": "换个角色、换个打法，换个心情",
+          "weights": {
+            "FLEX": 2,
+            "SHOW": 1
+          }
+        },
+        {
+          "text": "拉个朋友双排，边打边聊",
+          "weights": {
+            "TEAM": 2,
+            "NERVE": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q8",
+      "text": "只给你一把枪",
+      "options": [
+        {
+          "text": "暴徒 / 幻影 —— 稳定、可控，什么距离都能打",
+          "weights": {
+            "AIM": 2,
+            "GRIND": 1
+          }
+        },
+        {
+          "text": "大狙 —— 一枪一个，代价是不能空",
+          "weights": {
+            "NERVE": 2,
+            "AIM": 1
+          }
+        },
+        {
+          "text": "短管 / 判官 —— 贴脸才有意思",
+          "weights": {
+            "ENTRY": 2,
+            "FLEX": 1
+          }
+        },
+        {
+          "text": "什么顺手拿什么，枪是工具不是信仰",
+          "weights": {
+            "FLEX": 2,
+            "TEAM": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q9",
+      "text": "进攻方第一句话",
+      "options": [
+        {
+          "text": "「走，跟我进 A。」",
+          "weights": {
+            "ENTRY": 2,
+            "SHOW": 1
+          }
+        },
+        {
+          "text": "「先别急，等我把信息拿到。」",
+          "weights": {
+            "IGL": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "「我去单摸，你们正面拉。」",
+          "weights": {
+            "FLEX": 2,
+            "ENTRY": 1
+          }
+        },
+        {
+          "text": "「谁缺技能？我这儿有。」",
+          "weights": {
+            "TEAM": 2,
+            "IGL": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q10",
+      "text": "教练让你换到最不擅长的位置",
+      "options": [
+        {
+          "text": "立刻答应，队伍需要就练",
+          "weights": {
+            "TEAM": 2,
+            "GRIND": 1
+          }
+        },
+        {
+          "text": "先问清楚为什么，理解了再执行",
+          "weights": {
+            "IGL": 2,
+            "GRIND": 1
+          }
+        },
+        {
+          "text": "嘴上答应，心里想着用非常规打法证明自己",
+          "weights": {
+            "FLEX": 2,
+            "SHOW": 1
+          }
+        },
+        {
+          "text": "不太情愿，但只要能赢就上",
+          "weights": {
+            "NERVE": 2,
+            "TEAM": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q11",
+      "text": "队友会说你打起来像",
+      "options": [
+        {
+          "text": "指挥官，全程报点、安排",
+          "weights": {
+            "IGL": 2,
+            "TEAM": 1
+          }
+        },
+        {
+          "text": "人形 BGM，赢了先喊",
+          "weights": {
+            "SHOW": 2,
+            "ENTRY": 1
+          }
+        },
+        {
+          "text": "沉默杀手，只在关键帧说一句",
+          "weights": {
+            "AIM": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "战术鬼才，总有奇怪的提议",
+          "weights": {
+            "FLEX": 2,
+            "IGL": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q12",
+      "text": "赛前 30 分钟",
+      "options": [
+        {
+          "text": "练枪图里热手，手感最重要",
+          "weights": {
+            "AIM": 2,
+            "GRIND": 1
+          }
+        },
+        {
+          "text": "看对手录像，记他们的默认站位",
+          "weights": {
+            "GRIND": 2,
+            "IGL": 1
+          }
+        },
+        {
+          "text": "和队友聊天开玩笑，把气氛拉起来",
+          "weights": {
+            "SHOW": 2,
+            "TEAM": 1
+          }
+        },
+        {
+          "text": "一个人安静待着，把状态压到最稳",
+          "weights": {
+            "NERVE": 2,
+            "AIM": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q13",
+      "text": "输掉比赛，复盘先看什么",
+      "options": [
+        {
+          "text": "自己的失误帧，一帧一帧看",
+          "weights": {
+            "GRIND": 2,
+            "AIM": 1
+          }
+        },
+        {
+          "text": "整体节奏，哪一波该快、哪一波该慢",
+          "weights": {
+            "IGL": 2,
+            "TEAM": 1
+          }
+        },
+        {
+          "text": "队友之间的配合，谁没跟上谁",
+          "weights": {
+            "TEAM": 2,
+            "IGL": 1
+          }
+        },
+        {
+          "text": "有没有更「脏」一点的操作可以偷",
+          "weights": {
+            "FLEX": 2,
+            "SHOW": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q14",
+      "text": "对面狙神连续三回合先手带走你",
+      "options": [
+        {
+          "text": "换个角度硬刚，我不信他能一直中",
+          "weights": {
+            "ENTRY": 2,
+            "AIM": 1
+          }
+        },
+        {
+          "text": "用道具和假动作把他逼出来",
+          "weights": {
+            "FLEX": 2,
+            "IGL": 1
+          }
+        },
+        {
+          "text": "避开他，打另一边，让他无事可做",
+          "weights": {
+            "IGL": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "稳住，等他自己失误",
+          "weights": {
+            "NERVE": 2,
+            "GRIND": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q15",
+      "text": "赢了，记者问「这波是谁的功劳」",
+      "options": [
+        {
+          "text": "「我们队，所有人。」",
+          "weights": {
+            "TEAM": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "「我。」（微笑）",
+          "weights": {
+            "SHOW": 2,
+            "AIM": 1
+          }
+        },
+        {
+          "text": "认真讲一遍这波战术是怎么设计的",
+          "weights": {
+            "IGL": 2,
+            "GRIND": 1
+          }
+        },
+        {
+          "text": "「运气好，下把还得练。」",
+          "weights": {
+            "GRIND": 2,
+            "NERVE": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q16",
+      "text": "赛点 12:12，最后一回合",
+      "options": [
+        {
+          "text": "我要第一个进，把节奏抢过来",
+          "weights": {
+            "ENTRY": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "按练过一万遍的默认打，一分一分来",
+          "weights": {
+            "GRIND": 2,
+            "IGL": 1
+          }
+        },
+        {
+          "text": "占最舒服的位置，等那个机会",
+          "weights": {
+            "AIM": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "说句玩笑话，把队友的紧张打散",
+          "weights": {
+            "SHOW": 2,
+            "TEAM": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q17",
+      "text": "最爽的一刻",
+      "options": [
+        {
+          "text": "1v3 收掉最后一个",
+          "weights": {
+            "NERVE": 2,
+            "AIM": 1
+          }
+        },
+        {
+          "text": "五个人像一个人，完美的一波进攻",
+          "weights": {
+            "TEAM": 2,
+            "IGL": 1
+          }
+        },
+        {
+          "text": "用没人想到的打法赢下关键局",
+          "weights": {
+            "FLEX": 2,
+            "SHOW": 1
+          }
+        },
+        {
+          "text": "全场都在喊你的名字",
+          "weights": {
+            "SHOW": 2,
+            "AIM": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q18",
+      "text": "队友说「这把摆了」",
+      "options": [
+        {
+          "text": "劝，能救一个是一个",
+          "weights": {
+            "TEAM": 2,
+            "SHOW": 1
+          }
+        },
+        {
+          "text": "不管他，我自己打自己的",
+          "weights": {
+            "AIM": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "干脆改成四人打法，围绕剩下的人打",
+          "weights": {
+            "IGL": 2,
+            "FLEX": 1
+          }
+        },
+        {
+          "text": "打得更好给他看，让他后悔",
+          "weights": {
+            "SHOW": 2,
+            "ENTRY": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q19",
+      "text": "只能保留一项能力",
+      "options": [
+        {
+          "text": "永远不会空枪的手",
+          "weights": {
+            "AIM": 2,
+            "GRIND": 1
+          }
+        },
+        {
+          "text": "永远不会慌的心",
+          "weights": {
+            "NERVE": 2,
+            "TEAM": 1
+          }
+        },
+        {
+          "text": "一眼看穿对面的脑子",
+          "weights": {
+            "IGL": 2,
+            "GRIND": 1
+          }
+        },
+        {
+          "text": "什么都能玩的手感",
+          "weights": {
+            "FLEX": 2,
+            "ENTRY": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q20",
+      "text": "你想被这样评价",
+      "options": [
+        {
+          "text": "「这人枪太狠了。」",
+          "weights": {
+            "AIM": 2,
+            "SHOW": 1
+          }
+        },
+        {
+          "text": "「跟他打很舒服。」",
+          "weights": {
+            "TEAM": 2,
+            "NERVE": 1
+          }
+        },
+        {
+          "text": "「他总能让队伍赢。」",
+          "weights": {
+            "IGL": 2,
+            "GRIND": 1
+          }
+        },
+        {
+          "text": "「他打得太有观赏性了。」",
+          "weights": {
+            "SHOW": 2,
+            "FLEX": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q21",
+      "kind": "aim",
+      "aimWeight": 5,
+      "text": "你的靶场中等靶平均成绩是？",
+      "hint": "按常用枪械连续测 3 轮，每轮 30 靶，取平均成绩并四舍五入。",
+      "options": [
+        {
+          "text": "27–30",
+          "weights": {
+            "AIM": 100
+          }
+        },
+        {
+          "text": "22–26",
+          "weights": {
+            "AIM": 75
+          }
+        },
+        {
+          "text": "16–21",
+          "weights": {
+            "AIM": 45
+          }
+        },
+        {
+          "text": "15 及以下",
+          "weights": {
+            "AIM": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q22",
+      "kind": "aim",
+      "aimWeight": 3,
+      "text": "横拉出去，敌人就在预瞄点附近。你的急停首发通常是？",
+      "options": [
+        {
+          "text": "左右换向后也能反复完成，首发很少失控",
+          "weights": {
+            "AIM": 100
+          }
+        },
+        {
+          "text": "多数时候能停稳，并让第一枪打在预期位置",
+          "weights": {
+            "AIM": 75
+          }
+        },
+        {
+          "text": "能停住，但经常要重新找头再开枪",
+          "weights": {
+            "AIM": 45
+          }
+        },
+        {
+          "text": "人还没完全停住，枪已经响了",
+          "weights": {
+            "AIM": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q23",
+      "kind": "aim",
+      "aimWeight": 2,
+      "text": "马枪之后，你会：",
+      "options": [
+        {
+          "text": "我几乎从不马枪",
+          "weights": {
+            "AIM": 100
+          }
+        },
+        {
+          "text": "冷静横移重新定位",
+          "weights": {
+            "AIM": 75
+          }
+        },
+        {
+          "text": "继续按住左键尝试控枪击杀",
+          "weights": {
+            "AIM": 45
+          }
+        },
+        {
+          "text": "马到底",
+          "weights": {
+            "AIM": 15
+          }
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "version": 2,
+    "styleFloor": 20,
+    "styleExponent": 0.5,
+    "aimSpecialWeight": 0.75
+  }
+}

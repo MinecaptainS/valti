@@ -17,6 +17,7 @@ function boot(
   url = "https://valti.test/#home",
   deny = false,
   modifiedData = data,
+  storageKey = "valti.v1",
 ) {
   const dom = new JSDOM(html, {
     url,
@@ -64,7 +65,7 @@ function boot(
     const blob = new w.Blob([buf], { type: "image/png" });
     cb(blob);
   };
-  if (saved) w.localStorage.setItem("valti.v1", saved);
+  if (saved) w.localStorage.setItem(storageKey, saved);
   if (deny)
     Object.defineProperty(w, "localStorage", {
       get() {
@@ -341,6 +342,78 @@ async function main() {
   assert.match(injected.text(), /<img src=x/);
   injected.dom.window.close();
   log.push("Data text is escaped; HTML injection renders as text.");
+  const customData = structuredClone(require("./fixtures/baseline-data.json"));
+  const extra = structuredClone(customData.questions[3]);
+  extra.id = "Q_custom";
+  customData.questions.push(extra);
+  customData.datasetRevision = "custom-preview";
+  const customAnswers = [...entry.answers, 0],
+    originalTop = require("../app.js").score(customAnswers, customData).top
+      .player;
+  const longNote = "这是新增选手的原始描述，用于验证较长文字会完整保留。"
+    .repeat(6)
+    .slice(0, 120);
+  customData.players.push({
+    ...originalTop,
+    id: "a_custom",
+    name: "新增选手",
+    note: longNote,
+  });
+  const customSource = "const DATA = " + JSON.stringify(customData) + ";";
+  const customHistory = JSON.stringify({
+    history: [
+      {
+        id: "custom-result",
+        time: Date.now(),
+        scoringVersion: 2,
+        answers: customAnswers,
+      },
+    ],
+    unlocked: ["a_custom"],
+  });
+  const custom = boot(
+    customHistory,
+    "https://valti.test/#result/custom-result",
+    false,
+    customSource,
+    "valti.dataset.custom-preview",
+  );
+  assert.equal(
+    custom.w.document.querySelector(".identity h1").textContent,
+    "新增选手",
+  );
+  assert.equal(
+    custom.w.document.querySelector(".identity .original-note").textContent,
+    longNote,
+  );
+  assert.ok(
+    !custom.w.document
+      .querySelector(".profile")
+      .textContent.includes("undefined"),
+  );
+  const customResult = custom.w.__qa.score(customAnswers, custom.w.__qa.DATA),
+    customCard = custom.w.__qa.makeShareCanvas(customResult);
+  const customLines = customCard.drawnText.filter(
+    (t) => t.x === 120 && t.y >= 625 && t.y <= 669,
+  );
+  assert.equal(customLines.map((t) => t.text).join(""), longNote);
+  assert.ok(customLines.length <= 3);
+  assert.ok(customLines.every((t) => t.width <= 860));
+  custom.w.location.hash = "atlas";
+  await sleep(20);
+  assert.equal(custom.w.document.querySelectorAll(".player-tile").length, 36);
+  custom.dom.window.close();
+  const isolated = boot(
+    customHistory,
+    "https://valti.test/#history",
+    false,
+    customSource,
+  );
+  assert.equal(isolated.w.document.querySelectorAll(".history-item").length, 0);
+  isolated.dom.window.close();
+  log.push(
+    "Edited datasets support 24 questions, 36 players, new-player text, long share descriptions and isolated answer history.",
+  );
   console.log(log.join("\n"));
 }
 main().catch((e) => {
