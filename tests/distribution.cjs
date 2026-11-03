@@ -31,7 +31,7 @@ console.log(
       sample: 1000,
       seed: 20261103,
       coverage,
-      total: 35,
+      total: data.players.length,
       peakPercent: peak,
       coverageTarget: 30,
       peakTargetPercent: 15,

@@ -10,6 +10,10 @@ const root = path.resolve(__dirname, ".."),
   html = fs.readFileSync(path.join(root, "index.html"), "utf8"),
   data = fs.readFileSync(path.join(root, "data.js"), "utf8");
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
+const activeData = require("../data.js");
+const activeStorageKey = activeData.datasetRevision
+  ? "valti.dataset." + activeData.datasetRevision
+  : "valti.v1";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const log = [];
 function boot(
@@ -17,7 +21,7 @@ function boot(
   url = "https://valti.test/#home",
   deny = false,
   modifiedData = data,
-  storageKey = "valti.v1",
+  storageKey = activeStorageKey,
 ) {
   const dom = new JSDOM(html, {
     url,
@@ -94,7 +98,12 @@ function boot(
 }
 async function main() {
   let q = boot();
-  assert.match(q.text(), /23 题 · 约 3 分钟 · 35 位职业选手/);
+  assert.match(
+    q.text(),
+    new RegExp(
+      "23 题 · 约 3 分钟 · " + activeData.players.length + " 位职业选手",
+    ),
+  );
   q.click('[data-action="start"]');
   await sleep(20);
   assert.match(q.text(), /你主要玩的英雄是/);
@@ -113,7 +122,7 @@ async function main() {
   );
   q.click('[data-choice="2"]');
   await sleep(210);
-  const saved = q.w.localStorage.getItem("valti.v1");
+  const saved = q.w.localStorage.getItem(activeStorageKey);
   q.dom.window.close();
   q = boot(saved, "https://valti.test/#quiz");
   assert.match(q.text(), /1v3 残局/);
@@ -217,7 +226,7 @@ async function main() {
     );
   }
   log.push(
-    "Original author descriptions appear verbatim on the result identity card; all 35 Canvas cards contain the full note without overflow.",
+    "Original author descriptions appear verbatim on the result identity card; all active Canvas cards contain the full note without overflow.",
   );
   q.click('[data-action="close"]');
   assert.equal(q.blobs.size, 0);
@@ -228,15 +237,22 @@ async function main() {
   log.push("Repeated sharing and object URL cleanup passed.");
   q.w.location.hash = "atlas";
   await sleep(20);
-  assert.equal(q.w.document.querySelectorAll(".player-tile").length, 35);
-  assert.ok(q.w.document.querySelectorAll(".locked").length < 35);
+  assert.equal(
+    q.w.document.querySelectorAll(".player-tile").length,
+    activeData.players.length,
+  );
+  assert.ok(
+    q.w.document.querySelectorAll(".locked").length < activeData.players.length,
+  );
   const unlocked = q.w.document.querySelector(".player-tile:not(.locked)");
   unlocked.click();
   assert.equal(q.w.document.querySelector("dialog").open, true);
   q.click('[data-action="close"]');
   q.click('[data-filter="控场"]');
   assert.ok(q.w.document.querySelectorAll(".player-tile").length > 0);
-  log.push("35-tile atlas, unlocked details, four-role filtering passed.");
+  log.push(
+    "Active-player atlas, unlocked details, four-role filtering passed.",
+  );
   q.w.location.hash = "history";
   await sleep(20);
   q.click("[data-result]");
@@ -253,7 +269,7 @@ async function main() {
     assert.ok(text.includes("但你"));
   });
   log.push(
-    "All 35 personalized profiles contain 80–110 characters and a drawback.",
+    "All active personalized profiles contain 80–110 characters and a drawback.",
   );
   q.dom.window.close();
   const oldAnswers = Array.from({ length: 20 }, (_, i) => i % 4);
@@ -284,7 +300,7 @@ async function main() {
   assert.equal(legacy.w.__qa.getState().draft.index, 20);
   legacy.click('[data-choice="0"]');
   await sleep(210);
-  const upgradedDraft = legacy.w.localStorage.getItem("valti.v1");
+  const upgradedDraft = legacy.w.localStorage.getItem(activeStorageKey);
   legacy.dom.window.close();
   legacy = boot(upgradedDraft, "https://valti.test/#quiz");
   assert.match(legacy.text(), /急停首发/);
