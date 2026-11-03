@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0d151d" />
+    <meta
+      name="description"
+      content="23 道题，含 3 道枪法专项，找到与你打法气质最像的 VALORANT 职业选手。八维分析、选手图鉴与离线分享卡。"
+    />
+    <title>VALTI · 你是 VALORANT 的哪个选手</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="data.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">跳到主要内容</a>
+    <div class="site-wrap">
+      <header class="site-header">
+        <a class="wordmark" href="#home" aria-label="VALTI 首页"
+          ><span class="brand-icon">V</span> VALTI<span class="slash"> / </span
+          ><small>PLAYER DNA</small></a
+        >
+        <nav aria-label="主要导航">
+          <a href="#atlas">选手图鉴</a><a href="#history">我的历史</a>
+        </nav>
+      </header>
+      <main id="main" tabindex="-1"></main>
+      <footer>
+        <span><i class="status-dot"></i> 非官方粉丝作品 · 数据仅供娱乐</span
+        ><span>YOUR PLAY. YOUR IDENTITY.</span
+        ><span>数据采用交接包快照 · 非实时阵容</span>
+      </footer>
+    </div>
+    <div id="notice" role="status" aria-live="polite"></div>
+    <dialog id="modal" aria-label="选手详情与分享卡"></dialog>
+    <noscript
+      >此测试需要启用 JavaScript。所有计算都在本机完成，无需网络。</noscript
+    >
+  </body>
+</html>
