@@ -40,8 +40,24 @@ function boot(
   };
   w.URL.revokeObjectURL = (u) => blobs.delete(u);
   w.HTMLCanvasElement.prototype.getContext = function () {
-    this.native ||= createCanvas(this.width, this.height);
-    return this.native.getContext("2d");
+    if (!this.nativeContext) {
+      this.native = createCanvas(this.width, this.height);
+      this.nativeContext = this.native.getContext("2d");
+      this.drawnText = [];
+      const originalFillText = this.nativeContext.fillText.bind(
+        this.nativeContext,
+      );
+      this.nativeContext.fillText = (text, x, y, ...rest) => {
+        this.drawnText.push({
+          text,
+          x,
+          y,
+          width: this.nativeContext.measureText(text).width,
+        });
+        originalFillText(text, x, y, ...rest);
+      };
+    }
+    return this.nativeContext;
   };
   w.HTMLCanvasElement.prototype.toBlob = function (cb) {
     const buf = this.native.toBuffer("image/png");
@@ -138,6 +154,11 @@ async function main() {
     q.w.document.querySelector(".identity h1").textContent,
     result.top.player.name,
   );
+  assert.equal(
+    q.w.document.querySelector(".identity .original-note").textContent,
+    result.top.player.note,
+  );
+  assert.equal(q.w.document.querySelectorAll("main .original-note").length, 1);
   const displayed = [
     ...q.w.document.querySelectorAll(".dimension-list strong"),
   ].map((n) => Number(n.textContent));
@@ -171,6 +192,31 @@ async function main() {
     "Actual Canvas PNG generated: 1080×1920, " +
       ms +
       "ms (DOM/Canvas harness; browser download not tested).",
+  );
+  for (const player of q.w.__qa.DATA.players) {
+    const card = q.w.__qa.makeShareCanvas({
+      ...result,
+      top: { ...result.top, player },
+    });
+    const lines = card.drawnText.filter(
+      (t) => t.x === 120 && t.y >= 635 && t.y <= 665,
+    );
+    assert.equal(
+      lines.map((t) => t.text).join(""),
+      player.note,
+      player.name + " note must be drawn verbatim",
+    );
+    assert.ok(
+      lines.length >= 1 && lines.length <= 2,
+      player.name + " note must fit above the radar",
+    );
+    assert.ok(
+      lines.every((t) => t.width <= 860),
+      player.name + " note must fit horizontally",
+    );
+  }
+  log.push(
+    "Original author descriptions appear verbatim on the result identity card; all 35 Canvas cards contain the full note without overflow.",
   );
   q.click('[data-action="close"]');
   assert.equal(q.blobs.size, 0);

@@ -630,6 +630,13 @@ footer {
   margin: 20px 0 0;
   overflow-wrap: anywhere;
 }
+.original-note--hero {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.75;
+  margin: 12px 0 18px;
+  white-space: pre-wrap;
+}
 .scene {
   grid-column: 1/-1;
   display: grid;

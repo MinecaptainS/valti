@@ -534,7 +534,7 @@ if (typeof document !== "undefined") {
     current = { entry, r };
     const p = r.top.player;
     page(
-      `<div class="result-head"><div class="eyebrow">ANALYSIS COMPLETE / 你的选手 DNA</div><a class="text-btn" href="#history">查看历史 →</a></div><section class="result-grid"><div class="panel identity"><div class="identity-top">${shield(p)}<div><div class="muted" style="font-size:12px">${esc(team(p).name)}</div><span class="role-tag">${esc(p.role)}${p.igl ? " · 指挥" : ""}</span>${p.sub ? `<span class="role-tag">副位 · ${esc(p.sub)}</span>` : ""}</div></div><span class="pretitle">你的打法气质，更像</span><h1>${esc(p.name)}</h1><div class="similarity"><strong>${r.similarity}<span style="font-size:24px;color:var(--red)">%</span></strong><span>风格相似度</span></div>${r.blend ? `<div class="blend">你 = ${r.share}% ${esc(p.name)} + ${100 - r.share}% ${esc(r.second.player.name)}</div>` : '<div class="blend">独属于你的风格，不止于一个标签。</div>'}<div class="keywords">${keywords(
+      `<div class="result-head"><div class="eyebrow">ANALYSIS COMPLETE / 你的选手 DNA</div><a class="text-btn" href="#history">查看历史 →</a></div><section class="result-grid"><div class="panel identity"><div class="identity-top">${shield(p)}<div><div class="muted" style="font-size:12px">${esc(team(p).name)}</div><span class="role-tag">${esc(p.role)}${p.igl ? " · 指挥" : ""}</span>${p.sub ? `<span class="role-tag">副位 · ${esc(p.sub)}</span>` : ""}</div></div><span class="pretitle">你的打法气质，更像</span><h1>${esc(p.name)}</h1><blockquote class="original-note original-note--hero">${esc(p.note)}</blockquote><div class="similarity"><strong>${r.similarity}<span style="font-size:24px;color:var(--red)">%</span></strong><span>风格相似度</span></div>${r.blend ? `<div class="blend">你 = ${r.share}% ${esc(p.name)} + ${100 - r.share}% ${esc(r.second.player.name)}</div>` : '<div class="blend">独属于你的风格，不止于一个标签。</div>'}<div class="keywords">${keywords(
         p,
       )
         .map((k) => `<span>${esc(k)}</span>`)
@@ -543,7 +543,7 @@ if (typeof document !== "undefined") {
         )}</div></div><div class="panel"><div class="section-label">YOUR PLAYSTYLE / 八维对照</div>${radar(
         r.pct,
         p.v.map((x) => x * 10),
-      )}<div class="legend"><span>你的选择</span><span class="ref">${esc(p.name)}</span></div><div class="dimension-list">${DATA.dims.map((d, i) => `<div>${esc(d.label)}<strong>${Math.round(r.pct[i])}</strong></div>`).join("")}</div></div><div class="panel"><div class="section-label">PLAYER PERSONALITY / 你的人设</div><p class="profile">${esc(profile(p))}</p><blockquote class="original-note">${esc(p.note)}</blockquote><p class="muted" style="font-size:11px;margin-top:16px">代表英雄：${esc(p.heroes)}</p></div><div class="panel"><div class="section-label">ROLE CONFESSION / 你的位置自白</div><h2>${esc(r.role)}</h2><p class="profile">${esc(roleVoice[r.role])}在${esc(r.role)}选手里，你最像 ${esc(r.roleBest.name)}，最不像 ${esc(r.roleLeast.name)}。这是节奏和选择的差异，不是实力排名。</p>${r.pct[2] >= 70 ? '<span class="role-tag">✦ 指挥潜质 · IGL ≥ 70</span>' : ""}</div><div class="panel scene"><div><div class="section-label">YOUR HIGHLIGHT</div><h2>你的名场面</h2></div><p>${esc(scene(entry.answers))}</p></div><div class="panel"><div class="section-label">BEST DUO / 最佳拍档</div><div class="partner-line">${shield(r.complement)}<strong>${esc(r.complement.name)}</strong></div><p class="profile">你们俩组队会把短板补成另一种强项：${esc(traits[r.pct.indexOf(Math.max(...r.pct))])}由你带头，他用${esc(keywords(r.complement)[0])}接住你的另一面。记得先沟通节奏，互补才不会变成各打各的。</p></div><div class="panel"><div class="section-label">COLLECTION / 本机解锁进度</div><h2>${state.unlocked.length}<span class="muted" style="font-size:18px"> / 35</span></h2><p class="muted" style="font-size:13px">每次完成测试，解锁你的主选手。混合结果会同时解锁两位选手。</p><a class="text-btn" href="#atlas">前往选手图鉴 ↗</a></div></section><div class="button-row"><button class="btn primary" data-action="share">保存分享卡 ↗</button>${r.version === 1 ? '<button class="btn" data-action="upgrade">补答 3 道枪法题</button>' : ""}<button class="btn" data-action="restart">再测一次</button><a class="btn ghost" href="#atlas">查看图鉴</a></div><p class="muted" style="font-size:10px;margin-top:18px">${r.version === 1 ? "这是旧版 20 题结果。补答 3 道枪法题，即可生成新版结果。" : "八维为风格指数，枪法结合专项自评；相似度不代表实力。"}所有结果仅保存在当前浏览器。</p>`,
+      )}<div class="legend"><span>你的选择</span><span class="ref">${esc(p.name)}</span></div><div class="dimension-list">${DATA.dims.map((d, i) => `<div>${esc(d.label)}<strong>${Math.round(r.pct[i])}</strong></div>`).join("")}</div></div><div class="panel"><div class="section-label">PLAYSTYLE INSIGHT / 打法解读</div><p class="profile">${esc(profile(p))}</p><p class="muted" style="font-size:11px;margin-top:16px">代表英雄：${esc(p.heroes)}</p></div><div class="panel"><div class="section-label">ROLE CONFESSION / 你的位置自白</div><h2>${esc(r.role)}</h2><p class="profile">${esc(roleVoice[r.role])}在${esc(r.role)}选手里，你最像 ${esc(r.roleBest.name)}，最不像 ${esc(r.roleLeast.name)}。这是节奏和选择的差异，不是实力排名。</p>${r.pct[2] >= 70 ? '<span class="role-tag">✦ 指挥潜质 · IGL ≥ 70</span>' : ""}</div><div class="panel scene"><div><div class="section-label">YOUR HIGHLIGHT</div><h2>你的名场面</h2></div><p>${esc(scene(entry.answers))}</p></div><div class="panel"><div class="section-label">BEST DUO / 最佳拍档</div><div class="partner-line">${shield(r.complement)}<strong>${esc(r.complement.name)}</strong></div><p class="profile">你们俩组队会把短板补成另一种强项：${esc(traits[r.pct.indexOf(Math.max(...r.pct))])}由你带头，他用${esc(keywords(r.complement)[0])}接住你的另一面。记得先沟通节奏，互补才不会变成各打各的。</p></div><div class="panel"><div class="section-label">COLLECTION / 本机解锁进度</div><h2>${state.unlocked.length}<span class="muted" style="font-size:18px"> / 35</span></h2><p class="muted" style="font-size:13px">每次完成测试，解锁你的主选手。混合结果会同时解锁两位选手。</p><a class="text-btn" href="#atlas">前往选手图鉴 ↗</a></div></section><div class="button-row"><button class="btn primary" data-action="share">保存分享卡 ↗</button>${r.version === 1 ? '<button class="btn" data-action="upgrade">补答 3 道枪法题</button>' : ""}<button class="btn" data-action="restart">再测一次</button><a class="btn ghost" href="#atlas">查看图鉴</a></div><p class="muted" style="font-size:10px;margin-top:18px">${r.version === 1 ? "这是旧版 20 题结果。补答 3 道枪法题，即可生成新版结果。" : "八维为风格指数，枪法结合专项自评；相似度不代表实力。"}所有结果仅保存在当前浏览器。</p>`,
     );
   }
   function atlas() {
@@ -688,13 +688,18 @@ if (typeof document !== "undefined") {
     ctx.fillText(p.role + (p.igl ? " · 指挥" : ""), 280, 361);
     ctx.fillStyle = "#8b9db0";
     ctx.font = '25px "Microsoft YaHei",sans-serif';
-    ctx.fillText("你的打法气质，更像", 100, 490);
+    ctx.fillText("你的打法气质，更像", 100, 470);
     ctx.fillStyle = "#e6eef6";
     let size = 115;
     do {
       ctx.font = `italic bold ${size--}px system-ui,sans-serif`;
     } while (ctx.measureText(p.name).width > 880 && size > 40);
-    ctx.fillText(p.name, 94, 620);
+    ctx.fillText(p.name, 94, 580);
+    ctx.fillStyle = "#e6eef6";
+    ctx.font = '22px "Microsoft YaHei",sans-serif';
+    const noteBottom = canvasText(ctx, p.note, 120, 635, 860, 30);
+    ctx.fillStyle = "#ff4655";
+    ctx.fillRect(100, 615, 3, noteBottom - 608);
     ctx.fillStyle = "#ff4655";
     ctx.font = "bold 84px monospace";
     ctx.fillText(r.similarity + "%", 100, 746);
